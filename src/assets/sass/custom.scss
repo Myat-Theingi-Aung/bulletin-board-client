@@ -1,7 +1,11 @@
-.s-input {
-  cursor: pointer;
+.dropdown-toggle::after {
+  color: #198754;
 }
 
-.s-input:focus {
-  outline: none !important;
+.fs-small {
+  font-size: 7px !important;
+}
+
+.pointer {
+  cursor: pointer;
 }
