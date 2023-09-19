@@ -147,11 +147,8 @@
         edit: 'posts/edit',
         keyword: ref(''),
         post: [],
-        posts: [
-          { id: 1, title: 'Post one title', description: 'john@example.com', status: 'Active', created_user_id: 1, updated_user_id: 1, created_at: 'something', updated_at: 'something..' },
-          { id: 2, title: 'Post two title', description: 'aungaung@gmail.com', status: 'Inactive', created_user_id: 2, updated_user_id: 1, created_at: 'something', updated_at: 'something..' },
-        ]
-        // posts: []
+        posts: [],
+        token: localStorage.getItem('token'),
       }
     },
     methods: {
@@ -162,11 +159,11 @@
         this.post = post;
       }
     },
-    // mounted() {
-    //   api.get('/posts')
-    //   .then((response) => {
-    //     this.posts = response.data.posts
-    //   })
-    // }
+    mounted() {
+      api.get('/posts')
+      .then((response) => {
+        this.posts = response.data.posts
+      })
+    }
   }
 </script>

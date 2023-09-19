@@ -59,9 +59,10 @@ export default {
 data() {
   return {
     list: '/posts',
+    user: localStorage.getItem('user'),
     form: {
       title: '',
-      description: ''
+      description: '',
     },
     errors: {
       error: '',
@@ -69,6 +70,9 @@ data() {
       description: ''
     },
   };
+},
+created() {
+  this.form.user_id = this.user.id
 },
 methods: {
   async create(){

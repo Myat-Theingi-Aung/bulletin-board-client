@@ -16,7 +16,7 @@
                   <label for="email" class="form-label mb-0 me-3">Email Address:</label>
                 </div>
                 <div class="col-6">
-                  <input type="email" class="form-control" id="email" v-model="form.email">
+                  <input type="text" class="form-control" id="email" v-model="form.email">
                   <span class="text-danger fw-bolder" v-if="this.errors.email">
                     <span v-text="this.errors.email" />
                   </span>
@@ -83,7 +83,10 @@ import api from '../../axios';
     async login(){
       await api.post('/login', this.form)
       .then((response) => {
-        console.log('success')
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        this.$router.push({ name: "posts" })
+        
       })
       .catch((error) => {
         error.response.data.error ? this.errors.error = error.response.data.error : this.errors.error = ''

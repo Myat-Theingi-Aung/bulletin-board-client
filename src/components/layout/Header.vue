@@ -1,5 +1,14 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import api from '../../axios'
+
+  function logout(){
+    api.post('/logout')
+    .then(() => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    })
+  }
 </script>
 
 <template>
@@ -31,7 +40,7 @@ import { RouterLink } from 'vue-router'
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><RouterLink class="dropdown-item" to="/users/profile">Profile</RouterLink></li>
-                  <li><RouterLink class="dropdown-item" to="#">Logout</RouterLink></li>
+                  <li><router-link class="dropdown-item" to="" @click="logout">Logout</router-link></li>
                 </ul>
               </div>
             </ul>
