@@ -14,5 +14,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  optimizeDeps: {
+    include: ['jquery'], // Include jQuery as an external dependency
+  },
 })

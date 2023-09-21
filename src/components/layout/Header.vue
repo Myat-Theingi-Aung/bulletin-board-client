@@ -1,16 +1,3 @@
-<script setup>
-import { RouterLink } from 'vue-router'
-import api from '../../axios'
-
-  function logout(){
-    api.post('/logout')
-    .then(() => {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-    })
-  }
-</script>
-
 <template>
   <div class="row bg-light">
     <div class="col-12">
@@ -29,13 +16,13 @@ import api from '../../axios'
                 <RouterLink class="nav-link text-success" to="/">Posts</RouterLink>
               </li>
             </ul>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" v-if="user">
               <li class="nav-item">
                 <RouterLink class="nav-link text-success" to="/register">Create User</RouterLink>
               </li>
               <div class="dropdown">
                 <button class="btn btn-transparent dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <span class="d-inline-block text-success me-2">Myat Theingi Aung</span>
+                  <span class="d-inline-block text-success me-2">{{ user?.name }}</span>
                   <font-awesome-icon class="icon text-success" icon="fa-solid fa-user-gear" />
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -44,6 +31,11 @@ import api from '../../axios'
                 </ul>
               </div>
             </ul>
+            <ul class="navbar-nav" v-else>
+              <li class="nav-item">
+                <RouterLink class="nav-link text-success" to="/login">Login</RouterLink>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -51,3 +43,34 @@ import api from '../../axios'
   </div>
   
 </template>
+
+<script setup>
+import { RouterLink, useRouter } from 'vue-router'
+import api from '../../axios'
+import { ref, onMounted, watch } from 'vue';
+
+  const user = ref(null);
+  const router = useRouter();
+
+  const getUserFromLocalStorage = () => {
+    const userData = localStorage.getItem('user');
+    if (userData) { user.value = JSON.parse(userData); }
+  };
+
+  onMounted(() => {
+    getUserFromLocalStorage();
+  });
+
+  function logout(){
+    api.post('/logout')
+    .then(() => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      localStorage.removeItem('remember_token')
+      router.push({ name: "posts" })
+        setTimeout(() => {
+          window.location.reload();
+        }, 10);
+    })
+  }
+</script>

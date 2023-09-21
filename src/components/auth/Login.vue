@@ -6,8 +6,8 @@
           <div class="card-header bg-success">
             <h5 class="text-white">Log In</h5>
           </div>
-          <div class="alert alert-danger" role="alert" v-if="this.errors.error">
-            <span v-text="this.errors.error" />
+          <div class="alert alert-danger" role="alert" v-if="errors.error">
+            <span v-text="errors.error" />
           </div>
           <div class="card-body py-5">
             <form @submit.prevent="login">
@@ -17,8 +17,8 @@
                 </div>
                 <div class="col-6">
                   <input type="text" class="form-control" id="email" v-model="form.email">
-                  <span class="text-danger fw-bolder" v-if="this.errors.email">
-                    <span v-text="this.errors.email" />
+                  <span class="text-danger fw-bolder" v-if="errors.email">
+                    <span v-text="errors.email" />
                   </span>
                 </div>
               </div>
@@ -28,8 +28,8 @@
                 </div>
                 <div class="col-6">
                   <input type="password" class="form-control" id="password" v-model="form.password">
-                  <span class="text-danger fw-bolder" v-if="this.errors.password">
-                    <span v-text="this.errors.password" />
+                  <span class="text-danger fw-bolder" v-if="errors.password">
+                    <span v-text="errors.password" />
                   </span>
                 </div>
               </div>
@@ -38,8 +38,8 @@
                 <div class="col-6">
                   <div class="mb-3 d-flex justify-content-between align-items-center">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                      <label class="form-check-label" for="flexCheckDefault">
+                      <input class="form-check-input" v-model="form.remember" type="checkbox" id="remember" :key="form.remember">
+                      <label class="form-check-label" for="remember">
                         Remember me
                       </label>
                     </div>
@@ -60,40 +60,43 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import api from '../../axios';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-  export default {
-  data() {
-    return {
-      forgotLink: 'forgot-password',
-      createLink: 'register',
-      form: {
-        email: '',
-        password: ''
-      },
-      errors: {
-        error: '',
-        email: '',
-        password: ''
-      },
-    };
-  },
-  methods: {
-    async login(){
-      await api.post('/login', this.form)
+  const forgotLink = 'forgot';
+  const createLink = '#';
+  const router = useRouter();
+  const initialForm = {
+    email: '',
+    error: '',
+    password: '',
+    remember: false
+  };
+
+  const form = ref({...initialForm});
+
+  const errors = ref(Object.fromEntries(
+    Object.keys(initialForm).map(key => [key, ''])
+  ));
+
+  const login = () => {
+    api.post('/login', form.value)
       .then((response) => {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.user))
-        this.$router.push({ name: "posts" })
-        
+        response.data.remember && localStorage.setItem('remember_token', JSON.stringify(response.data.remember))
+        router.push({ name: "posts" })
+        setTimeout(() => {
+          window.location.reload();
+        }, 10);
       })
       .catch((error) => {
-        error.response.data.error ? this.errors.error = error.response.data.error : this.errors.error = ''
-        error.response.data.errors.email ? this.errors.email =  error.response.data.errors.email[0] : this.errors.email = ''
-        error.response.data.errors.password ? this.errors.password =  error.response.data.errors.password[0] : this.errors.password = ''
+        console.log(error)
+        error.response.data.error ? errors.value.error = error.response.data.error : errors.value.error = ''
+        error.response.data.errors?.email ? errors.value.email =  error.response.data.errors.email[0] : errors.value.email = ''
+        error.response.data.errors?.password ? errors.value.password =  error.response.data.errors.password[0] : errors.value.password = ''
       })
-    }
   }
-};
 </script>

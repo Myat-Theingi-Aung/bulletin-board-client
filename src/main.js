@@ -11,10 +11,20 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import moment from 'moment'
+import Paginate from "vuejs-paginate-next"
 
 const app = createApp(App)
 
 app.use(router)
+
+app.use(Paginate)
+
+app.config.globalProperties.$filters = {
+  dateFormat(date) {
+    return moment(date).format('YYYY/MM/DD');
+  },
+  }
 
 library.add(fas, far, fab);
 app.component('font-awesome-icon', FontAwesomeIcon)

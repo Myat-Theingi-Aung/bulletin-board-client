@@ -28,19 +28,19 @@ const router = createRouter({
     { path: '/forgot', name: 'forgot', component: ForgotPasswordView },
     { path: '/reset', name: 'reset', component: ResetPasswordView },
     { path: '/change/password', name: 'change', component: ChangePasswordView },
-    { path: '/sign-up', name: 'sign-up', component: SignUpView},
+    { path: '/sign-up', name: 'signUp', component: SignUpView},
 
     { path: '/users', name: 'users', component: UserListView },
-    { path: '/users/create/confirm', name: 'users-create', component: UserCreateConfirmView },
-    { path: '/users/edit', name: 'users-edit', component: UserEditView },
-    { path: '/users/profile', name: 'users-profile', component: UserProfileView },
+    { path: '/users/create/confirm', name: 'usersCreate', component: UserCreateConfirmView },
+    { path: '/users/edit', name: 'usersEdit', component: UserEditView },
+    { path: '/users/profile', name: 'usersProfile', component: UserProfileView },
 
     { path: '/', name: 'posts', component: PostListView },
-    { path: '/posts/create', name: 'posts-create', component: PostCreateView },
-    { path: '/posts/create/confirm', name: 'posts-create-confirm', component: PostCreateConfirmView },
-    { path: '/posts/edit', name: 'posts-edit', component: PostEditView },
-    { path: '/posts/edit/confirm', name: 'posts-ec', component: PostEditConfirmView },
-    { path: '/posts/upload', name: 'posts-upload', component: PostUploadView },
+    { path: '/posts/create', name: 'postsCreate', component: PostCreateView },
+    { path: '/posts/create/confirm', name: 'postsCreateConfirm', component: PostCreateConfirmView },
+    { path: '/posts/:id', name: 'postsEdit', component: PostEditView },
+    { path: '/posts/edit/confirm', name: 'postsEditConfirm', component: PostEditConfirmView },
+    { path: '/posts/upload', name: 'postsUpload', component: PostUploadView },
 
     { path: '/:pathMatch(.*)*', component: NotFound }
   ]

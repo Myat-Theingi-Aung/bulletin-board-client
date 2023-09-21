@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
   <div class="container py-5">
     <div class="row">
@@ -9,25 +6,28 @@
           <div class="card-header">
             <h5 class="mb-0 py-2">User List</h5>
           </div>
+          <div class="alert alert-success" role="alert" v-if="message">
+            <span v-text="message" />
+          </div>
           <div class="card-body">
-            <div class="row py-4">
+            <div class="row py-5">
               <div class="col-12">
-                <form @submit.prevent="searchForm" class="d-flex justify-content-end">
+                <form @submit.prevent="fetchUsers" class="d-flex justify-content-end">
                   <div class="d-flex align-items-center justify-content-center me-4">
                     <label for="name" class="form-label mb-0 me-3">Name:</label>
-                    <input type="email" class="form-control" id="name" v-model="name">
+                    <input type="text" class="form-control" id="name" v-model="name">
                   </div>
                   <div class="d-flex align-items-center justify-content-center me-4">
                     <label for="email" class="form-label mb-0 me-3">Email:</label>
                     <input type="email" class="form-control" id="email" v-model="email">
                   </div>
                   <div class="d-flex align-items-center justify-content-center me-4">
-                    <label for="startDate" class="form-label mb-0 me-3">From:</label>
-                    <input type="date" class="form-control" id="startDate" v-model="startDate">
+                    <label for="from" class="form-label mb-0 me-3">From:</label>
+                    <input type="date" class="form-control" id="from" v-model="from">
                   </div>
                   <div class="d-flex align-items-center justify-content-center me-4">
-                    <label for="endDate" class="from-label mb-0 me-3">to:</label>
-                    <input type="date" class="form-control" id="endDate" v-model="endDate">
+                    <label for="to" class="from-label mb-0 me-3">to:</label>
+                    <input type="date" class="form-control" id="to" v-model="to">
                   </div>
                   <button class="btn btn-primary">Search</button>
                 </form>
@@ -52,23 +52,43 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="user in users" :key="user.id">
-                      <td>{{ user.id }}</td>
-                      <td class="text-success pointer" @click="detailsUser(user)" data-bs-toggle="modal" data-bs-target="#userDetails">{{ user.name }}</td>
-                      <td>{{ user.email }}</td>
-                      <td>{{ user.created_user_id }}</td>
-                      <td>{{ user.type }}</td>
-                      <td>{{ user.phone }}</td>
-                      <td>{{ user.dob }}</td>
-                      <td>{{ user.address }}</td>
-                      <td>{{ user.created_at }}</td>
-                      <td>{{ user.updated_at }}</td>
-                      <td>
-                        <button @click="deleteUser(user)" data-bs-toggle="modal" data-bs-target="#userDelete" class="btn btn-danger btn-sm">Delete</button>
-                      </td>
-                    </tr>
+                    <template v-if="users.length === 0">
+                      <tr>
+                        <td colspan="11" class="text-center">There is no record</td>
+                      </tr>
+                    </template>
+                    <template v-else>
+                      <tr v-for="user in users" :key="user.id">
+                        <td>{{ user.id }}</td>
+                        <td class="text-success pointer" @click="detailsUser(user)" data-bs-toggle="modal" data-bs-target="#userDetails">{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ filterUsers(user.created_user_id)?.name }}</td>
+                        <td>{{ user.type == '1' ? 'User' : 'Admin' }}</td>
+                        <td>{{ user.phone }}</td>
+                        <td>{{ $filters.dateFormat(user.dob) }}</td>
+                        <td>{{ user.address }}</td>
+                        <td>{{ $filters.dateFormat(user.created_at) }}</td>
+                        <td>{{ $filters.dateFormat(user.updated_at) }}</td>
+                        <td>
+                          <button @click="deleteUser(user)" v-if="user.id !== currentUser.id" data-bs-toggle="modal" data-bs-target="#userDelete" class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                      </tr>
+                    </template>
                   </tbody>
                 </table>
+                <div class="flex justify-content-end mt-4" v-if="total > 1">
+                  <paginate
+                    :page-count="total"
+                    :page-range="2"
+                    :margin-pages="2"
+                    :click-handler="fetchUsers"
+                    :prev-text="'Previous'"
+                    :next-text="'Next'"
+                    :container-class="'pagination'"
+                    :page-class="'page-item'"
+                  >
+                  </paginate>
+                </div>
               </div>
             </div>
           </div>
@@ -86,37 +106,37 @@
           <div class="modal-body">
             <p class="fs-4 mb-5 text-danger">Are you sure you delete post?</p>
             <div class="row mb-4">
-              <div class="col-3 ps-4">ID</div>
-              <div class="col-9">{{ user.id }}</div>
+              <div class="col-4 ps-4">ID</div>
+              <div class="col-8">{{ user.id }}</div>
             </div>
             <div class="row mb-4">
-              <div class="col-3 ps-4">Name</div>
-              <div class="col-9">{{ user.name }}</div>
+              <div class="col-4 ps-4">Name</div>
+              <div class="col-8">{{ user.name }}</div>
             </div>
             <div class="row mb-4">
-              <div class="col-3 ps-4">Type</div>
-              <div class="col-9">{{ user.type }}</div>
+              <div class="col-4 ps-4">Type</div>
+              <div class="col-8">{{ user.type == '0' ? 'Admin' : 'User' }}</div>
             </div>
             <div class="row mb-4">
-              <div class="col-3 ps-4">Email</div>
-              <div class="col-9">{{ user.email }}</div>
+              <div class="col-4 ps-4">Email</div>
+              <div class="col-8">{{ user.email }}</div>
             </div>
             <div class="row mb-4">
-              <div class="col-3 ps-4">Phone</div>
-              <div class="col-9">{{ user.phone }}</div>
+              <div class="col-4 ps-4">Phone</div>
+              <div class="col-8">{{ user.phone }}</div>
             </div>
             <div class="row mb-4">
-              <div class="col-3 ps-4">Date of Birth</div>
-              <div class="col-9">{{ user.dob }}</div>
+              <div class="col-4 ps-4">Date of Birth</div>
+              <div class="col-8">{{ $filters.dateFormat(user.dob) }}</div>
             </div>
             <div class="row mb-4">
-              <div class="col-3 ps-4">Address</div>
-              <div class="col-9">{{ user.address }}</div>
+              <div class="col-4 ps-4">Address</div>
+              <div class="col-8">{{ user.address }}</div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-danger">Delete</button>
+            <button type="button"  @click="destroy(user.id)" class="btn btn-danger">Delete</button>
           </div>
         </div>
       </div>
@@ -132,49 +152,48 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-3 ps-4">
-                <img src="../../assets/img/default.jpg" class="img-fluid rounded" alt="">
+                <img :src="image" :alt="user.name" class="img-fluid rounded">
               </div>
-              <!-- <div class="col-1"></div> -->
               <div class="col-9">
                 <div class="row mb-3">
                   <div class="col-5">Name</div>
-                  <div class="col-7">MTA</div>
+                  <div class="col-7">{{user.name}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Type</div>
-                  <div class="col-7">admin</div>
+                  <div class="col-7">{{ user.type == '1' ? 'User' : 'Admin' }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Email</div>
-                  <div class="col-7">aungaung@gmail.com</div>
+                  <div class="col-7">{{user.email}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Phone</div>
-                  <div class="col-7">0987654321</div>
+                  <div class="col-7">{{user.phone}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Date of Birth</div>
-                  <div class="col-7">2021-04-01</div>
+                  <div class="col-7">{{ $filters.dateFormat(user.dob) }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Address</div>
-                  <div class="col-7">Yangon</div>
+                  <div class="col-7">{{user.address}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Created Date</div>
-                  <div class="col-7">2021-04-01</div>
+                  <div class="col-7">{{ $filters.dateFormat(user.created_at) }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Created Uer</div>
-                  <div class="col-7">Admin</div>
+                  <div class="col-7">{{ filterUsers(user.created_user_id)?.name }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Updated Date</div>
-                  <div class="col-7">2021-04-01</div>
+                  <div class="col-7">{{ $filters.dateFormat(user.updated_at) }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Updated User</div>
-                  <div class="col-7">Mg Mg</div>
+                  <div class="col-7">{{ filterUsers(user.updated_user_id)?.name }}</div>
                 </div>
               </div>
             </div>
@@ -188,37 +207,69 @@
   </div>
 </template>
 
-<script>
-  import { ref } from 'vue'
-  import api from '../../axios';
+<script setup>
+  import { ref, onMounted } from 'vue'
+  import api from '../../axios'
+  import $ from 'jquery'
+  import Paginate from 'vuejs-paginate-next';
 
-  export default {
-    data() {
-      return {
-        name: ref(''),
-        email: ref(''),
-        startDate: ref(''),
-        endDate: ref(''),
-        user: [],
-        users: [
-          { id: 1, name: 'John Doe', email: 'john@example.com', created_user_id: 1, type: 1, phone: '09987654321', dob: '17-4-2000', address: 'pyay', created_at: 'something', updated_at: 'something..' },
-          { id: 2, name: 'Aung Aung', email: 'aungaung@gmail.com', created_user_id: 2, type: 1, phone: '09987654321', dob: '17-4-2000', address: 'pyay', created_at: 'something', updated_at: 'something..' },
-        ]
-      }
-    },
-    methods: {
-      deleteUser(user) {
-        this.user = user;
-      },
-      detailsUser(user) {
-        this.user = user
-      }
-    }
-    // mounted() {
-    //   api.get('/users')
-    //   .then((response) => {
-    //     this.users = response.data.users
-    //   })
-    // }
+  const name = ref('');
+  const email = ref('');
+  const from = ref('');
+  const to = ref('');
+  const users = ref([]);
+  const total = ref()
+  const user = ref([]);
+  const image = ref('')
+  const currentUser = ref('')
+  const message = ref('')
+
+  const getUserFromLocalStorage = () => {
+    const userData = localStorage.getItem('user');
+    if (userData) { currentUser.value = JSON.parse(userData); }
+  };
+
+  const deleteUser = (selectedUser) => {
+    user.value = selectedUser;
+  };
+
+  const detailsUser = (selectedUser) => {
+    user.value = selectedUser;
+    fetchImage(user.value.profile);
+  };
+
+  const fetchUsers = (page = 1) => {
+    api.get(`/users?page=${page}&name=${name.value}&email=${email.value}&from=${from.value}&to=${to.value}`)
+      .then((response) => {
+        total.value = response.data.pagination.total
+        users.value = response.data.users;
+      });
   }
+
+  const destroy = (id) => {
+    api.delete(`/users/${id}`)
+    .then(() => {
+      $("#userDelete").hide();
+      $(".modal-backdrop").remove();
+      $("body").removeClass("modal-open");
+      fetchUsers();
+      message.value = "User Delete Successfully!"
+    })
+  }
+
+  const fetchImage = (filename) => {
+    api.get(`/images/${filename}`, { responseType: 'blob' })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        const imageUrl = URL.createObjectURL(blob);
+        image.value = imageUrl;
+      })
+  };
+
+  const filterUsers = (id) => users.value.find(user => user.id === id);
+
+  onMounted(() => {
+    getUserFromLocalStorage();
+    fetchUsers();
+  });
 </script>

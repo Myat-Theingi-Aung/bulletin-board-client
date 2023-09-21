@@ -14,13 +14,18 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@vuesimple/vs-pagination": "^1.4.13",
     "axios": "^1.5.0",
     "bootstrap": "^5.3.1",
+    "jquery": "^3.7.1",
+    "moment": "^2.29.4",
     "sass": "^1.66.1",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.4",
+    "vuejs-paginate-next": "^1.0.2"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.19",
     "@vitejs/plugin-vue": "^4.3.1",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
     "eslint": "^8.46.0",
