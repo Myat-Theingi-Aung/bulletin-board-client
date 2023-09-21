@@ -241,7 +241,7 @@
   const fetchUsers = (page = 1) => {
     api.get(`/users?page=${page}&name=${name.value}&email=${email.value}&from=${from.value}&to=${to.value}`)
       .then((response) => {
-        total.value = response.data.pagination.total
+        total.value = response.data.pagination.last_page
         users.value = response.data.users;
       });
   }

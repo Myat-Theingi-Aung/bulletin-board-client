@@ -192,7 +192,7 @@ import Paginate from 'vuejs-paginate-next';
   const fetchPosts = (page = 1) => {
     api.get(`/posts?page=${page}&search=${keyword.value}&user=${currentUser.value?.id}`)
       .then((response) => {
-        total.value = response.data.pagination.total
+        total.value = response.data.pagination.last_page
         posts.value = response.data.posts;
       })
   }
