@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0 py-2">User List</h5>
+          <div class="card-header bg-success">
+            <h5 class="mb-0 py-2 text-white">User List</h5>
           </div>
           <div class="alert alert-success" role="alert" v-if="message">
             <span v-text="message" />
@@ -29,7 +29,7 @@
                     <label for="to" class="from-label mb-0 me-3">to:</label>
                     <input type="date" class="form-control" id="to" v-model="to">
                   </div>
-                  <button class="btn btn-primary">Search</button>
+                  <button class="btn btn-success">Search</button>
                 </form>
               </div>
             </div>
