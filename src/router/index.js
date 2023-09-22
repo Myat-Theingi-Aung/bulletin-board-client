@@ -27,23 +27,33 @@ const router = createRouter({
     { path: '/register', name: 'register', component: RegisterView },
     { path: '/forgot', name: 'forgot', component: ForgotPasswordView },
     { path: '/reset', name: 'reset', component: ResetPasswordView },
-    { path: '/change/password', name: 'change', component: ChangePasswordView },
+    { path: '/change/password', name: 'change', component: ChangePasswordView, meta: { requiresAuth: true } },
     { path: '/sign-up', name: 'signUp', component: SignUpView},
 
-    { path: '/users', name: 'users', component: UserListView },
-    { path: '/users/create/confirm', name: 'usersCreate', component: UserCreateConfirmView },
-    { path: '/users/edit', name: 'usersEdit', component: UserEditView },
-    { path: '/users/profile', name: 'usersProfile', component: UserProfileView },
+    { path: '/users', name: 'users', component: UserListView, meta: { requiresAuth: true }, },
+    { path: '/users/create/confirm', name: 'usersCreate', component: UserCreateConfirmView, meta: { requiresAuth: true }, },
+    { path: '/users/edit', name: 'usersEdit', component: UserEditView, meta: { requiresAuth: true }, },
+    { path: '/users/profile', name: 'usersProfile', component: UserProfileView, meta: { requiresAuth: true }, },
 
     { path: '/', name: 'posts', component: PostListView },
-    { path: '/posts/create', name: 'postsCreate', component: PostCreateView },
-    { path: '/posts/create/confirm', name: 'postsCreateConfirm', component: PostCreateConfirmView },
-    { path: '/posts/:id', name: 'postsEdit', component: PostEditView },
-    { path: '/posts/edit/confirm', name: 'postsEditConfirm', component: PostEditConfirmView },
-    { path: '/posts/upload', name: 'postsUpload', component: PostUploadView },
+    { path: '/posts/create', name: 'postsCreate', component: PostCreateView, meta: { requiresAuth: true }, },
+    { path: '/posts/create/confirm', name: 'postsCreateConfirm', component: PostCreateConfirmView, meta: { requiresAuth: true }, },
+    { path: '/posts/:id', name: 'postsEdit', component: PostEditView, meta: { requiresAuth: true }, },
+    { path: '/posts/edit/confirm', name: 'postsEditConfirm', component: PostEditConfirmView, meta: { requiresAuth: true }, },
+    { path: '/posts/upload', name: 'postsUpload', component: PostUploadView, meta: { requiresAuth: true }, },
 
     { path: '/:pathMatch(.*)*', component: NotFound }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const isAuthenticated = localStorage.getItem('user') !== null;
+
+    isAuthenticated ? next() : next('/login')
+  } else {
+    next();
+  }
+});
 
 export default router;

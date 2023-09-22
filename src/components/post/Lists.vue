@@ -22,9 +22,9 @@
                   </div>
                   <button class="btn btn-success px-5">Search</button>
                 </form>
-                <a class="btn btn-success me-3 px-5" :href="create">Create</a>
-                <a class="btn btn-success me-3 px-5" :href="upload">Upload</a>
-                <button class="btn btn-success px-5" @click="downloadCSV">Download</button>
+                <a v-if="Object.keys(currentUser).length > 0" class="btn btn-success me-3 px-5" :href="create">Create</a>
+                <a v-if="Object.keys(currentUser).length > 0" class="btn btn-success me-3 px-5" :href="upload">Upload</a>
+                <button class="btn btn-success px-5" v-if="Object.keys(currentUser).length > 0" @click="downloadCSV">Download</button>
               </div>
             </div>
             <div class="row">
