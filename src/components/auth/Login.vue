@@ -64,10 +64,12 @@
 import api from '../../axios';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
   const forgotLink = 'forgot';
   const createLink = '#';
   const router = useRouter();
+  const store = useStore();
   const initialForm = {
     email: '',
     error: '',
@@ -84,9 +86,10 @@ import { useRouter } from 'vue-router';
   const login = () => {
     api.post('/login', form.value)
       .then((response) => {
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        response.data.remember && localStorage.setItem('remember_token', JSON.stringify(response.data.remember))
+        const user = response.data.user;
+        const token = response.data.token;
+        const remember = response.data.remember || null;
+        store.dispatch('login', { user, token, remember });
         router.push({ name: "posts" })
         setTimeout(() => {
           window.location.reload();

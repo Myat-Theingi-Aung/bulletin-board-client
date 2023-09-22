@@ -16,7 +16,7 @@
                 <RouterLink class="nav-link text-success" to="/">Posts</RouterLink>
               </li>
             </ul>
-            <ul class="navbar-nav" v-if="user">
+            <ul class="navbar-nav" v-if="store.getters.isLoggedIn">
               <li class="nav-item">
                 <RouterLink class="nav-link text-success" to="/register">Create User</RouterLink>
               </li>
@@ -47,27 +47,18 @@
 <script setup>
 import { RouterLink, useRouter } from 'vue-router'
 import api from '../../axios'
-import { ref, onMounted, watch } from 'vue';
+import { useStore } from 'vuex'
 
-  const user = ref(null);
   const router = useRouter();
-
-  const getUserFromLocalStorage = () => {
-    const userData = localStorage.getItem('user');
-    if (userData) { user.value = JSON.parse(userData); }
-  };
-
-  onMounted(() => {
-    getUserFromLocalStorage();
-  });
+  const store = useStore();
+  const user = store.state.user;
 
   function logout(){
     api.post('/logout')
     .then(() => {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      localStorage.removeItem('remember_token')
+      store.dispatch('logout')
       router.push({ name: "posts" })
+      
         setTimeout(() => {
           window.location.reload();
         }, 10);

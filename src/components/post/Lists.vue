@@ -9,9 +9,9 @@
           <div class="card-header bg-success">
             <h5 class="mb-0 py-2 text-white">Post List</h5>
           </div>
-          <div class="alert alert-success" role="alert" v-if="message">
+          <!-- <div class="alert alert-success" role="alert" v-if="message">
             <span v-text="message" />
-          </div>
+          </div> -->
           <div class="card-body">
             <div class="row py-4">
               <div class="col-12 d-flex justify-content-end">
@@ -22,9 +22,11 @@
                   </div>
                   <button class="btn btn-success px-5">Search</button>
                 </form>
-                <a v-if="Object.keys(currentUser).length > 0" class="btn btn-success me-3 px-5" :href="create">Create</a>
-                <a v-if="Object.keys(currentUser).length > 0" class="btn btn-success me-3 px-5" :href="upload">Upload</a>
-                <button class="btn btn-success px-5" v-if="Object.keys(currentUser).length > 0" @click="downloadCSV">Download</button>
+                <span v-if="store.getters.isLoggedIn">
+                  <a class="btn btn-success me-3 px-5" :href="create">Create</a>
+                  <a class="btn btn-success me-3 px-5" :href="upload">Upload</a>
+                  <button class="btn btn-success px-5" @click="downloadCSV">Download</button>
+                </span>  
               </div>
             </div>
             <div class="row">
@@ -36,7 +38,7 @@
                       <th scope="col">Post Description</th>
                       <th scope="col">Posted User</th>
                       <th scope="col">Posted Date</th>
-                      <th v-if="Object.keys(currentUser).length > 0" scope="col">Operation</th>
+                      <th v-if="store.getters.isLoggedIn" scope="col">Operation</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -51,7 +53,7 @@
                         <td>{{ post.description }}</td>
                         <td>{{ filterUsers(post.created_user_id)?.name }}</td>
                         <td>{{ $filters.dateFormat(post.created_at) }}</td>
-                        <td v-if="Object.keys(currentUser).length > 0">
+                        <td v-if="store.getters.isLoggedIn">
                           <a :href="'posts/'+ post.id" class="btn btn-primary btn-sm me-3">Edit</a>
                           <button @click="deletePost(post)" data-bs-toggle="modal" data-bs-target="#postDelete" class="btn btn-danger btn-sm">Delete</button>
                         </td>
@@ -161,33 +163,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '../../axios';
+import { ref, onMounted, computed  } from 'vue'
+import api from '../../axios'
 import $ from 'jquery'
-import Paginate from 'vuejs-paginate-next';
+import Paginate from 'vuejs-paginate-next'
+import { useStore } from 'vuex'
 
-  const create = 'posts/create';
-  const upload = 'posts/upload'
-  const keyword = ref('');
-  const post = ref([]);
-  const posts = ref([]);
+  const store = useStore()
+  const create = '/posts/create'
+  const upload = '/posts/upload'
+  const keyword = ref('')
+  const post = ref([])
+  const posts = ref([])
   const users = ref([])
   const total = ref()
-  const currentUser = ref({})
-  const data = JSON.parse(localStorage.getItem('user'));
-  const message = ref('')
-  const token = localStorage.getItem('token');
+
+  const currentUser = store.state.user
+  // const message = store.state.message
+  // const message = ref('')
 
   onMounted(() => {
-    getUserFromLocalStorage();
     fetchPosts();
     fetchUsers();
   });
-
-  const getUserFromLocalStorage = () => {
-    const userData = localStorage.getItem('user');
-    if (userData) {  currentUser.value = JSON.parse(userData); }
-  };
 
   const fetchPosts = (page = 1) => {
     api.get(`/posts?page=${page}&search=${keyword.value}&user=${currentUser.value?.id}`)
@@ -223,7 +221,7 @@ import Paginate from 'vuejs-paginate-next';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
-      message.value = "Post Download Successfully!"
+      // message.value = "Post Download Successfully!"
     })
     .catch((error) => console.log(error))
   }

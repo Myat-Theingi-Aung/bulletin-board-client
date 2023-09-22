@@ -7,7 +7,7 @@
                         <h5 class="text-white">Create Post</h5>
                         <a class="btn btn-light text-success" :href="list">Back</a>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body my-4">
                         <form @submit.prevent="create">
                             <div class="row align-items-center mb-4">
                               <div class="col-4 text-end">
@@ -18,8 +18,8 @@
                               </div>
                               <div class="col-6">
                                 <input type="text" class="form-control" id="text" v-model="form.title">
-                                <span class="text-danger fw-bolder" v-if="this.errors.title">
-                                  <span v-text="this.errors.title" />
+                                <span class="text-danger fw-bolder" v-if="errors.title">
+                                  <span v-text="errors.title" />
                                 </span>
                               </div>
                             </div>
@@ -32,8 +32,8 @@
                               </div>
                               <div class="col-6">
                                 <textarea type="text" class="form-control" id="text" v-model="form.description"></textarea>
-                                <span class="text-danger fw-bolder" v-if="this.errors.description">
-                                  <span v-text="this.errors.description" />
+                                <span class="text-danger fw-bolder" v-if="errors.description">
+                                  <span v-text="errors.description" />
                                 </span>
                               </div>
                             </div>
@@ -41,7 +41,7 @@
                               <div class="col-4"></div>
                               <div class="col-6">
                                 <button class="btn btn-success me-3">Create</button>
-                                <button class="btn btn-secondary">Clear</button>
+                                <a class="btn btn-secondary" @click="resetForm">Clear</a>
                               </div>
                             </div>
                         </form>
@@ -52,40 +52,55 @@
     </div>
 </template>
 
-<script>
-import api from '../../axios';
+<script setup>
+import api from '../../axios'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { ref} from 'vue'
+import { error } from 'jquery'
 
-export default {
-data() {
-  return {
-    list: '/posts',
-    user: localStorage.getItem('user'),
-    form: {
-      title: '',
-      description: '',
-    },
-    errors: {
-      error: '',
-      title: '',
-      description: ''
-    },
-  };
-},
-created() {
-  this.form.user_id = this.user.id
-},
-methods: {
-  async create(){
-    await api.post('/posts', this.form)
-    .then((response) => {
-      console.log('success')
+  const store = useStore()
+  const router = useRouter()
+  const list = '/'
+  const user = store.state.user
+  const post = store.state.post
+  const initialForm = {
+    title: post.title,
+    description: post.description,
+    user_id: user.id,
+    flag: false,
+    created_user_id: user.id,
+    updated_user_id: user.id
+  }
+  const form = ref({ ...initialForm })
+  const errors = ref({
+    error: store.state.errors.error,
+    title: store.state.errors.title,
+    description: store.state.errors.description
+  })
+
+  console.log(store.state.errors)
+
+  const create = () => {
+    api.post('/posts', form.value)
+    .then(() => {
+      store.dispatch('post', form.value)
+      router.push({ name: 'postsCreateConfirm' })
     })
     .catch((error) => {
-      error.response.data.error ? this.errors.error = error.response.data.error : this.errors.error = ''
-      error.response.data.errors.title ? this.errors.title =  error.response.data.errors.title[0] : this.errors.title = ''
-      error.response.data.errors.description ? this.errors.description =  error.response.data.errors.description[0] : this.errors.description = ''
+      error.response.data.error ? errors.value.error = error.response.data.error : errors.value.error = ''
+      error.response.data.errors.title ? errors.value.title =  error.response.data.errors.title[0] : errors.value.title = ''
+      error.response.data.errors.description ? errors.value.description =  error.response.data.errors.description[0] : errors.value.description = ''
     })
   }
-}
-};
+
+  const resetForm = () => {
+    store.dispatch('postClear')
+    store.dispatch('errorsClear')
+    form.value.title = ''
+    form.value.description = ''
+    errors.value.error = ''
+    errors.value.title = ''
+    errors.value.description = ''
+  }
 </script>

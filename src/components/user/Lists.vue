@@ -211,8 +211,10 @@
   import { ref, onMounted } from 'vue'
   import api from '../../axios'
   import $ from 'jquery'
-  import Paginate from 'vuejs-paginate-next';
+  import Paginate from 'vuejs-paginate-next'
+  import { useStore } from 'vuex';
 
+  const store = useStore()
   const name = ref('');
   const email = ref('');
   const from = ref('');
@@ -221,13 +223,8 @@
   const total = ref()
   const user = ref([]);
   const image = ref('')
-  const currentUser = ref('')
+  const currentUser = store.state.user
   const message = ref('')
-
-  const getUserFromLocalStorage = () => {
-    const userData = localStorage.getItem('user');
-    if (userData) { currentUser.value = JSON.parse(userData); }
-  };
 
   const deleteUser = (selectedUser) => {
     user.value = selectedUser;
@@ -269,7 +266,6 @@
   const filterUsers = (id) => users.value.find(user => user.id === id);
 
   onMounted(() => {
-    getUserFromLocalStorage();
     fetchUsers();
   });
 </script>

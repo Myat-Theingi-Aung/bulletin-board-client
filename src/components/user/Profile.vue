@@ -53,16 +53,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from "vue"
 import api from '../../axios'
+import { useStore } from 'vuex'
 
-  const user = ref([])
+  const store = useStore()
+  const user = store.state.user
   const image = ref('')
-  
-  const getUserFromLocalStorage = () => {
-    const userData = localStorage.getItem('user');
-    if (userData) { user.value = JSON.parse(userData); }
-  };
 
   const fetchImage = (filename) => {
     api.get(`/images/${filename}`, { responseType: 'blob' })
@@ -74,7 +71,6 @@ import api from '../../axios'
   };
 
   onMounted(() => {
-    getUserFromLocalStorage();
-    fetchImage(user.value.profile);
+    fetchImage(user.profile);
   });
 </script>
