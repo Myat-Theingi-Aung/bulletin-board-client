@@ -68,7 +68,6 @@ import { ref } from 'vue'
   const form = ref({ ...initialForm })
 
   const errors = ref({
-    error: '',
     title: '',
     description: ''
   })
@@ -77,11 +76,11 @@ import { ref } from 'vue'
     api.post('/posts', form.value)
     .then((response) => {
       store.dispatch('message', response.data.success)
-      store.dispatch('postClear')
+      store.dispatch('registerClear')
+      store.dispatch('errorsClear')
       router.push({name: 'posts'})
     })
     .catch((error) => {
-      error.response.data.error ? errors.value.error = error.response.data.error : errors.value.error = ''
       error.response.data.errors.title ? errors.value.title =  error.response.data.errors.title[0] : errors.value.title = ''
       error.response.data.errors.description ? errors.value.description =  error.response.data.errors.description[0] : errors.value.description = ''
       store.dispatch('errors', errors.value)

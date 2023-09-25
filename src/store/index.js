@@ -11,6 +11,8 @@ const vuexPersist = new VuexPersist({
     remember: state.remember,
     message: state.message,
     errors: state.errors,
+    register: state.register,
+    image: state.image,
   }),
 });
 
@@ -22,6 +24,8 @@ const store = createStore({
     remember: null,
     message: null,
     errors: {},
+    register: {},
+    image: null,
   },
   mutations: {
     setUser(state, user) {
@@ -33,26 +37,38 @@ const store = createStore({
     setRemember(state, remember) {
       state.remember = remember;
     },
-    setPost(state, post) {
-      state.post = post;
-    },
-    setMessage(state, message) {
-      state.message = message;
-    },
-    setErrors(state, errors) {
-      state.errors = errors;
-    },
-    clearPost(state) {
-      state.post = {}
-    },
-    clearErrors(state) {
-      state.errors = {}
-    },
     clearUser(state) {
       state.user = {};
       state.token = null;
       state.remember = null;
     },
+    setPost(state, post) {
+      state.post = post;
+    },
+    clearPost(state) {
+      state.post = {}
+    },
+    setErrors(state, errors) {
+      state.errors = errors;
+    },
+    clearErrors(state) {
+      state.errors = {}
+    },
+    setMessage(state, message) {
+      state.message = message;
+    },
+    setRegister(state, register) {
+      state.register = register;
+    },
+    clearRegister(state) {
+      state.register = {}
+    },
+    setImage(state, image) {
+      state.image = image;
+    },
+    clearImage(state) {
+      state.image = null;
+    }
   },
   actions: {
     login({ commit }, {user, token, remember}) {
@@ -74,6 +90,18 @@ const store = createStore({
     },
     errorsClear( {commit} ) {
       commit('clearErrors');
+    },
+    register( {commit}, register) {
+      commit('setRegister', register);
+    },
+    registerClear( {commit} ) {
+      commit('clearRegister');
+    },
+    image( {commit}, image) {
+      commit('setImage', image);
+    },
+    imageClear( {commit} ) {
+      commit('clearImage');
     },
     logout({ commit }) {
       commit('clearUser');

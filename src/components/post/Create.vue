@@ -74,12 +74,9 @@ import { error } from 'jquery'
   }
   const form = ref({ ...initialForm })
   const errors = ref({
-    error: store.state.errors.error,
     title: store.state.errors.title,
     description: store.state.errors.description
   })
-
-  console.log(store.state.errors)
 
   const create = () => {
     api.post('/posts', form.value)
@@ -88,7 +85,6 @@ import { error } from 'jquery'
       router.push({ name: 'postsCreateConfirm' })
     })
     .catch((error) => {
-      error.response.data.error ? errors.value.error = error.response.data.error : errors.value.error = ''
       error.response.data.errors.title ? errors.value.title =  error.response.data.errors.title[0] : errors.value.title = ''
       error.response.data.errors.description ? errors.value.description =  error.response.data.errors.description[0] : errors.value.description = ''
     })
@@ -99,7 +95,6 @@ import { error } from 'jquery'
     store.dispatch('errorsClear')
     form.value.title = ''
     form.value.description = ''
-    errors.value.error = ''
     errors.value.title = ''
     errors.value.description = ''
   }

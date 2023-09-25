@@ -185,10 +185,12 @@ import { useStore } from 'vuex'
   onMounted(() => {
     fetchPosts();
     fetchUsers();
+    store.dispatch('postClear')
+    store.dispatch('errorsClear')
   });
 
   const fetchPosts = (page = 1) => {
-    api.get(`/posts?page=${page}&search=${keyword.value}&user=${currentUser.value?.id}`)
+    api.get(`/posts?page=${page}&search=${keyword.value}&user=${currentUser.id}`)
       .then((response) => {
         total.value = response.data.pagination.last_page
         posts.value = response.data.posts;
