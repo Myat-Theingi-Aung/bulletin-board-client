@@ -149,14 +149,12 @@ import { useStore } from 'vuex'
 
     api.post('/users', f, { headers })
     .then((response) => {
-      console.log('success')
       store.dispatch('message', response.data.success)
       store.dispatch('registerClear')
       store.dispatch('errorsClear')
       router.push({name: 'users'})
     })
     .catch((error) => {
-      console.log('error')
       const errorData = error.response.data.errors || {};
       for (let key in errors.value) {
         if (errorData.hasOwnProperty(key) && Array.isArray(errorData[key]) && errorData[key].length > 0) {

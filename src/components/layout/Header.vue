@@ -1,7 +1,7 @@
 <template>
-  <div class="row bg-light">
+  <div class="row bg-light sticky-top">
     <div class="col-12">
-      <nav class="navbar navbar-expand-lg sticky-top">
+      <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
           <a class="navbar-brand text-success" href="/">Bulletin_Board</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,10 +48,18 @@
 import { RouterLink, useRouter } from 'vue-router'
 import api from '../../axios'
 import { useStore } from 'vuex'
+import { ref, watch } from 'vue'
 
   const router = useRouter();
   const store = useStore();
-  const user = store.state.user;
+  const user = ref(store.state.user);
+
+  watch(
+    () => store.state.user,
+    (newUser) => {
+      user.value.name = newUser.name
+    }
+  );
 
   function logout(){
     api.post('/logout')

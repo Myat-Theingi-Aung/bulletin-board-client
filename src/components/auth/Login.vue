@@ -96,7 +96,6 @@ import { useStore } from 'vuex';
         }, 10);
       })
       .catch((error) => {
-        console.log(error)
         error.response.data.error ? errors.value.error = error.response.data.error : errors.value.error = ''
         error.response.data.errors?.email ? errors.value.email =  error.response.data.errors.email[0] : errors.value.email = ''
         error.response.data.errors?.password ? errors.value.password =  error.response.data.errors.password[0] : errors.value.password = ''

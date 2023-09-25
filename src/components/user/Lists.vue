@@ -184,7 +184,7 @@
                   <div class="col-7">{{ $filters.dateFormat(user.created_at) }}</div>
                 </div>
                 <div class="row mb-3">
-                  <div class="col-5">Created Uer</div>
+                  <div class="col-5">Created User</div>
                   <div class="col-7">{{ filterUsers(user.created_user_id)?.name }}</div>
                 </div>
                 <div class="row mb-3">
@@ -223,6 +223,7 @@
   const total = ref()
   const user = ref([]);
   const image = ref('')
+  const allUsers = ref([])
   const currentUser = store.state.user
   const message = ref('')
 
@@ -233,6 +234,7 @@
   const detailsUser = (selectedUser) => {
     user.value = selectedUser;
     fetchImage(user.value.profile);
+    console.log(user.value)
   };
 
   const fetchUsers = (page = 1) => {
@@ -240,6 +242,7 @@
       .then((response) => {
         total.value = response.data.pagination.last_page
         users.value = response.data.users;
+        allUsers.value = response.data.all_users;
       });
   }
 
@@ -263,7 +266,9 @@
       })
   };
 
-  const filterUsers = (id) => users.value.find(user => user.id === id);
+  const filterUsers = (id) =>{ 
+    return allUsers.value.find(user => user.id === id)
+  };
 
   onMounted(() => {
     fetchUsers();

@@ -99,8 +99,6 @@ import { useRouter } from 'vue-router'
       error.response.data.errors.description ? errors.value.description =  error.response.data.errors.description[0] : errors.value.description = ''
       store.dispatch('errors', errors.value)
       store.dispatch('post', form.value)
-      console.log(form.value.check)
-      console.log(form.value.status)
       form.value.status = form.value.check
       router.push({name: 'postsEdit', params: { id: postId }})
     })

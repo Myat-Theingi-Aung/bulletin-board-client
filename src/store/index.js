@@ -76,6 +76,9 @@ const store = createStore({
       commit('setToken', token);
       commit('setRemember', remember);
     },
+    user({commit}, user) {
+      commit('setUser', user);
+    },
     post({ commit }, post) {
       commit('setPost', post);
     },

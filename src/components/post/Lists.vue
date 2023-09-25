@@ -199,7 +199,7 @@ import { useStore } from 'vuex'
 
   const fetchUsers = () => {
     api.get(`/users`)
-    .then((response) => users.value = response.data.users)
+    .then((response) => users.value = response.data.all_users)
   }
 
   const deletePost = (selectedPost) => {
@@ -225,7 +225,6 @@ import { useStore } from 'vuex'
       window.URL.revokeObjectURL(url);
       // message.value = "Post Download Successfully!"
     })
-    .catch((error) => console.log(error))
   }
 
   const filterUsers = (id) => users.value.find(user => user.id === id);
@@ -233,7 +232,6 @@ import { useStore } from 'vuex'
   const destroy = (id) => {
     api.delete(`/posts/${id}`)
     .then(() => {
-      console.log('delete')
       $("#postDelete").hide();
       $(".modal-backdrop").remove();
       $("body").removeClass("modal-open");

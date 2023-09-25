@@ -7,7 +7,7 @@
             <h5 class="text-white">Profile Edit</h5>
           </div>
           <div class="card-body py-5">
-            <form @submit.prevent="edit">
+            <form @submit.prevent="update" method="post" enctype="multipart/form-data">
               <div class="row align-items-center">
                 <div class="col-4 text-end">
                   <label for="name" class="form-label mb-0 me-3">
@@ -17,8 +17,8 @@
                 </div>
                 <div class="col-6">
                   <input type="text" class="form-control" id="name" v-model="form.name">
-                  <span class="text-danger fw-bolder" v-if="this.errors.name">
-                    <span v-text="this.errors.name" />
+                  <span class="text-danger fw-bolder" v-if="errors.name">
+                    <span v-text="errors.name" />
                   </span>
                 </div>
               </div>
@@ -31,8 +31,8 @@
                 </div>
                 <div class="col-6">
                   <input type="email" class="form-control" id="email" v-model="form.email">
-                  <span class="text-danger fw-bolder" v-if="this.errors.email">
-                    <span v-text="this.errors.email" />
+                  <span class="text-danger fw-bolder" v-if="errors.email">
+                    <span v-text="errors.email" />
                   </span>
                 </div>
               </div>
@@ -53,8 +53,8 @@
                 </div>
                 <div class="col-6">
                   <input type="text" class="form-control" id="phone" v-model="form.phone">
-                  <span class="text-danger fw-bolder" v-if="this.errors.phone">
-                    <span v-text="this.errors.phone" />
+                  <span class="text-danger fw-bolder" v-if="errors.phone">
+                    <span v-text="errors.phone" />
                   </span>
                 </div>
               </div>
@@ -64,8 +64,8 @@
                 </div>
                 <div class="col-6">
                   <input type="date" class="form-control" id="dob" v-model="form.dob">
-                  <span class="text-danger fw-bolder" v-if="this.errors.dob">
-                    <span v-text="this.errors.dob" />
+                  <span class="text-danger fw-bolder" v-if="errors.dob">
+                    <span v-text="errors.dob" />
                   </span>
                 </div>
               </div>
@@ -75,15 +75,15 @@
                 </div>
                 <div class="col-6">
                   <input type="text" class="form-control" id="address" v-model="form.address">
-                  <span class="text-danger fw-bolder" v-if="this.errors.address">
-                    <span v-text="this.errors.address" />
+                  <span class="text-danger fw-bolder" v-if="errors.address">
+                    <span v-text="errors.address" />
                   </span>
                 </div>
               </div>
               <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end">Old Profile</div>
                 <div class="col-6">
-                  <img src="../../assets/img/default.jpg" alt="" class="img-fluid w-50 rounded">
+                  <img :src="image" :alt="user.name" class="img-fluid w-50 rounded">
                 </div>
               </div>
               <div class="row mt-4 align-items-center">
@@ -91,9 +91,9 @@
                   <label for="profile" class="form-label mb-0 me-3">New Profile</label>
                 </div>
                 <div class="col-6">
-                  <input type="file" class="form-control" id="profile">
-                  <span class="text-danger fw-bolder" v-if="this.errors.profile">
-                    <span v-text="this.errors.profile" />
+                  <input type="file" ref="file" @change="onFileSelected" class="form-control">
+                  <span class="text-danger fw-bolder" v-if="errors.profile">
+                    <span v-text="errors.profile" />
                   </span>
                 </div>
               </div>
@@ -101,7 +101,8 @@
                 <div class="col-4 text-end"></div>
                 <div class="col-6">
                   <button class="btn btn-success me-3">Edit</button>
-                  <button class="btn btn-secondary">Clear</button>
+                  <a class="btn btn-secondary me-3" @click="resetForm">Clear</a>
+                  <a class="text-decoration-none" href="/change/password">Change Password</a>
                 </div>
               </div>
             </form>
@@ -112,30 +113,73 @@
   </div>
 </template>
 
-<script>
-import api from '../../axios';
+<script setup>
+import api from '../../axios'
+import { useStore } from 'vuex'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-  export default {
-  data() {
-    return {
-      form: {
-        name: '',
-        email: '',
-        phone: '',
-        dob: '',
-        address: '',
-        type: ''
-      },
-      errors: {
-        name: '',
-        email: '',
-        phone: '',
-        dob: '',
-        address: '',
-        profile: '',
-        type: ''
-      },
-    };
-  },
-};
+  const store = useStore()
+  const router = useRouter()
+  const user = store.state.user
+  const image = ref('')
+  const headers = { 'Content-Type': 'multipart/form-data' }
+  const initialForm = {
+    'name': user.name,
+    'email': user.email,
+    'type': user.type,
+    'phone': user.phone,
+    'address': user.address,
+    'dob': user.dob,
+    'profile': '',
+    'created_user_id': user.id,
+    'updated_user_id': user.id
+  }
+  const form = ref({...initialForm})
+
+  const errors = ref(Object.fromEntries(
+    Object.keys(initialForm).map(key => [key, ''])
+  ));
+
+  onMounted(() => {
+    fetchImage(user.profile);
+  })
+
+  const onFileSelected = (e) => { 
+    form.value.profile = e.target.files[0]; 
+  }
+
+  const update = () => {
+    const f = new FormData();
+    for (let [key, val] of Object.entries(form.value)) {
+      f.append(key, val);
+    }
+    for (const [key, value] of f.entries()) {
+    }
+
+    api.post(`/users/${user.id}`, f, { headers })
+    .then((response) => {
+      store.dispatch('user', response.data.user)
+      store.dispatch('message', response.data.success)
+      router.push({name: 'users'})
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  const resetForm = function() {
+    const f = document.querySelector('form');
+    f.reset();
+    form.value = { ...initialForm };
+  }
+
+  const fetchImage = (filename) => {
+    api.get(`/images/${filename}`, { responseType: 'blob' })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        const imageUrl = URL.createObjectURL(blob);
+        image.value = imageUrl;
+      })
+  };
 </script>

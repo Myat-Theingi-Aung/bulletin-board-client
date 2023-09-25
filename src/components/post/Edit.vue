@@ -103,7 +103,6 @@ import router from '../../router';
   watch(
     () => store.state.post,
     (newPost) => {
-      console.log(newPost)
       const newStatus = newPost.status == '1' ? true : false;
       form.value = {
         id: newPost.id,
@@ -125,7 +124,6 @@ import router from '../../router';
     .then((response) => {
       const e = store.state.errors
       if(Object.keys(e).length == 0) {
-        console.log('fetch data')
         store.dispatch('post', response.data.post)
       }
     })
