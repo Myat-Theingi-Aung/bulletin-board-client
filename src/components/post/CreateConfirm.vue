@@ -99,7 +99,6 @@ import Swal from "sweetalert2"
       router.push({name: 'posts'})
     })
     .catch((error) => {
-      console.log(error)
       error.response.data.errors.title ? errors.value.title =  error.response.data.errors.title[0] : errors.value.title = ''
       error.response.data.errors.description ? errors.value.description =  error.response.data.errors.description[0] : errors.value.description = ''
       store.dispatch('errors', errors.value)
