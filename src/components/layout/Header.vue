@@ -21,8 +21,8 @@
                 <RouterLink class="nav-link text-success" to="/register">Create User</RouterLink>
               </li>
               <div class="dropdown">
-                <button class="btn btn-transparent dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <span class="d-inline-block text-success me-2">{{ user?.name }}</span>
+                <button class="btn btn-transparent dropdown-toggle border-0 p-0 pt-2 ps-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="d-inline-block text-success me-2 text-capitalize">{{ user?.name }}</span>
                   <font-awesome-icon class="icon text-success" icon="fa-solid fa-user-gear" />
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">

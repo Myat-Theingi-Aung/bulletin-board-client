@@ -127,6 +127,9 @@ import router from '../../router';
         store.dispatch('post', response.data.post)
       }
     })
+    .catch(() => {
+      router.push({ name: '404'})
+    })
   }
 
   const edit = () => {
@@ -142,7 +145,8 @@ import router from '../../router';
   }
 
   const resetForm = function() {
-    form.value = store.state.post
+    form.value.title = store.state.post.title
+    form.value.description = store.state.post.description
     form.value.check = store.state.post.status == '1' ? true : false
     form.value.flag = false
     errors.value.title = ''

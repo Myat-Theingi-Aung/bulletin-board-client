@@ -58,6 +58,7 @@ import { useRouter } from 'vue-router';
       router.push({ name: 'posts' });
     })
     .catch((error) => {
+      console.log(error)
       error.response.data.error ? errors.value = error.response.data.error : errors.value = ''
       error.response.data.errors.file ? errors.value = error.response.data.errors.file[0] : errors.value = ''
     })

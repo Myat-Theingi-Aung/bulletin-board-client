@@ -43,7 +43,8 @@ const router = createRouter({
     { path: '/posts/edit/confirm', name: 'postsEditConfirm', component: PostEditConfirmView, meta: { requiresAuth: true }, },
     { path: '/posts/upload', name: 'postsUpload', component: PostUploadView, meta: { requiresAuth: true }, },
 
-    { path: '/:pathMatch(.*)*', component: NotFound }
+    { path: '/404',name: '404', component: NotFound },
+    { path: '/:pathMatch(.*)*', redirect: { name: '404' } }
   ]
 })
 

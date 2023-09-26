@@ -163,9 +163,6 @@ import { useRouter } from 'vue-router'
       store.dispatch('message', response.data.success)
       router.push({name: 'users'})
     })
-    .catch((error) => {
-      console.log(error)
-    })
   }
 
   const resetForm = function() {

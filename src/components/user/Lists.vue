@@ -60,13 +60,13 @@
                     <template v-else>
                       <tr v-for="user in users" :key="user.id">
                         <td>{{ user.id }}</td>
-                        <td class="text-success pointer" @click="detailsUser(user)" data-bs-toggle="modal" data-bs-target="#userDetails">{{ user.name }}</td>
+                        <td class="text-success pointer text-capitalize" @click="detailsUser(user)" data-bs-toggle="modal" data-bs-target="#userDetails">{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ filterUsers(user.created_user_id)?.name }}</td>
                         <td>{{ user.type == '1' ? 'User' : 'Admin' }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ $filters.dateFormat(user.dob) }}</td>
-                        <td>{{ user.address }}</td>
+                        <td class="text-capitalize">{{ user.address }}</td>
                         <td>{{ $filters.dateFormat(user.created_at) }}</td>
                         <td>{{ $filters.dateFormat(user.updated_at) }}</td>
                         <td>
@@ -96,7 +96,7 @@
       </div>
     </div>
     <!-- user delete modal -->
-    <div class="modal fade" id="userDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="userDelete" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -111,7 +111,7 @@
             </div>
             <div class="row mb-4">
               <div class="col-4 ps-4">Name</div>
-              <div class="col-8">{{ user.name }}</div>
+              <div class="col-8 text-capitalize">{{ user.name }}</div>
             </div>
             <div class="row mb-4">
               <div class="col-4 ps-4">Type</div>
@@ -131,7 +131,7 @@
             </div>
             <div class="row mb-4">
               <div class="col-4 ps-4">Address</div>
-              <div class="col-8">{{ user.address }}</div>
+              <div class="col-8 text-capitalize">{{ user.address }}</div>
             </div>
           </div>
           <div class="modal-footer">
@@ -142,7 +142,7 @@
       </div>
     </div>
     <!-- user show modal -->
-    <div class="modal fade" id="userDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="userDetails" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -157,7 +157,7 @@
               <div class="col-9">
                 <div class="row mb-3">
                   <div class="col-5">Name</div>
-                  <div class="col-7">{{user.name}}</div>
+                  <div class="col-7 text-capitalize">{{user.name}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Type</div>
@@ -177,7 +177,7 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Address</div>
-                  <div class="col-7">{{user.address}}</div>
+                  <div class="col-7 text-capitalize">{{user.address}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Created Date</div>
@@ -185,7 +185,7 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Created User</div>
-                  <div class="col-7">{{ filterUsers(user.created_user_id)?.name }}</div>
+                  <div class="col-7 text-capitalize">{{ filterUsers(user.created_user_id)?.name }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Updated Date</div>
@@ -193,7 +193,7 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Updated User</div>
-                  <div class="col-7">{{ filterUsers(user.updated_user_id)?.name }}</div>
+                  <div class="col-7 text-capitalize">{{ filterUsers(user.updated_user_id)?.name }}</div>
                 </div>
               </div>
             </div>
@@ -234,11 +234,10 @@
   const detailsUser = (selectedUser) => {
     user.value = selectedUser;
     fetchImage(user.value.profile);
-    console.log(user.value)
   };
 
   const fetchUsers = (page = 1) => {
-    api.get(`/users?page=${page}&name=${name.value}&email=${email.value}&from=${from.value}&to=${to.value}`)
+    api.get(`/users?page=${page}&user=${currentUser.id}&name=${name.value}&email=${email.value}&from=${from.value}&to=${to.value}`)
       .then((response) => {
         total.value = response.data.pagination.last_page
         users.value = response.data.users;

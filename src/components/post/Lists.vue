@@ -82,7 +82,7 @@
       </div>
     </div>
     <!-- post delete modal -->
-    <div class="modal fade" id="postDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="postDelete" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -116,7 +116,7 @@
       </div>
     </div>
     <!-- post show modal -->
-    <div class="modal fade" id="postDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="postDetail" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -198,7 +198,7 @@ import { useStore } from 'vuex'
   }
 
   const fetchUsers = () => {
-    api.get(`/users`)
+    api.get(`/users?user=${currentUser.id}`)
     .then((response) => users.value = response.data.all_users)
   }
 
