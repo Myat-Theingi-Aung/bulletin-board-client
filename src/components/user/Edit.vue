@@ -100,7 +100,7 @@
               <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end"></div>
                 <div class="col-6">
-                  <button class="btn btn-success me-3">Edit</button>
+                  <button class="btn btn-success me-3">Update</button>
                   <a class="btn btn-secondary me-3" @click="resetForm">Clear</a>
                   <a class="text-decoration-none" href="/change/password">Change Password</a>
                 </div>
@@ -118,6 +118,19 @@ import api from '../../axios'
 import { useStore } from 'vuex'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Swal from "sweetalert2"
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const store = useStore()
   const router = useRouter()
@@ -159,6 +172,10 @@ import { useRouter } from 'vue-router'
 
     api.post(`/users/${user.id}`, f, { headers })
     .then((response) => {
+      Toast.fire({
+        icon: "success",
+        title: response.data.success,
+      });
       store.dispatch('user', response.data.user)
       store.dispatch('message', response.data.success)
       router.push({name: 'users'})

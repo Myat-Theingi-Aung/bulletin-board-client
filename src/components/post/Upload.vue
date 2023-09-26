@@ -38,7 +38,20 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../../axios'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import Swal from "sweetalert2"
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const router = useRouter();
   const list = '/'
@@ -54,11 +67,14 @@ import { useRouter } from 'vue-router';
     f.append('file', file.value)
 
     api.post('posts-import', f, { headers })
-    .then(() => {
+    .then((response) => {
+      Toast.fire({
+        icon: "success",
+        title: response.data.success,
+      });
       router.push({ name: 'posts' });
     })
     .catch((error) => {
-      console.log(error)
       error.response.data.error ? errors.value = error.response.data.error : errors.value = ''
       error.response.data.errors.file ? errors.value = error.response.data.errors.file[0] : errors.value = ''
     })

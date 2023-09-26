@@ -60,6 +60,19 @@ import api from '../../axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import Swal from "sweetalert2"
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const list = '/'
   const store = useStore()
@@ -89,7 +102,10 @@ import { useRouter } from 'vue-router'
   const update = () => {
     api.put(`/posts/${postId}`, form.value)
     .then((response) => {
-      store.dispatch('message', response.data.success)
+      Toast.fire({
+        icon: "success",
+        title: response.data.success,
+      });
       store.dispatch('postClear')
       store.dispatch('errorsClear')
       router.push({name: 'posts'})

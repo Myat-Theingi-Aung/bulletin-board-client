@@ -9,7 +9,6 @@ const vuexPersist = new VuexPersist({
     user: state.user,
     token: state.token,
     remember: state.remember,
-    message: state.message,
     errors: state.errors,
     register: state.register,
     image: state.image,
@@ -22,7 +21,6 @@ const store = createStore({
     user: {},
     token: null,
     remember: null,
-    message: null,
     errors: {},
     register: {},
     image: null,
@@ -54,9 +52,6 @@ const store = createStore({
     clearErrors(state) {
       state.errors = {}
     },
-    setMessage(state, message) {
-      state.message = message;
-    },
     setRegister(state, register) {
       state.register = register;
     },
@@ -68,7 +63,7 @@ const store = createStore({
     },
     clearImage(state) {
       state.image = null;
-    }
+    },
   },
   actions: {
     login({ commit }, {user, token, remember}) {
@@ -81,9 +76,6 @@ const store = createStore({
     },
     post({ commit }, post) {
       commit('setPost', post);
-    },
-    message({ commit }, message) {
-      commit('setMessage', message);
     },
     errors({ commit }, errors) {
       commit('setErrors', errors);

@@ -9,9 +9,6 @@
           <div class="card-header bg-success">
             <h5 class="mb-0 py-2 text-white">Post List</h5>
           </div>
-          <!-- <div class="alert alert-success" role="alert" v-if="message">
-            <span v-text="message" />
-          </div> -->
           <div class="card-body">
             <div class="row py-4">
               <div class="col-12 d-flex justify-content-end">
@@ -163,11 +160,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed  } from 'vue'
+import { ref, onMounted, watch  } from 'vue'
 import api from '../../axios'
 import $ from 'jquery'
 import Paginate from 'vuejs-paginate-next'
 import { useStore } from 'vuex'
+import Swal from "sweetalert2"
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const store = useStore()
   const create = '/posts/create'
@@ -177,10 +187,7 @@ import { useStore } from 'vuex'
   const posts = ref([])
   const users = ref([])
   const total = ref()
-
   const currentUser = store.state.user
-  // const message = store.state.message
-  // const message = ref('')
 
   onMounted(() => {
     fetchPosts();
@@ -223,7 +230,10 @@ import { useStore } from 'vuex'
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
-      // message.value = "Post Download Successfully!"
+      Toast.fire({
+        icon: "success",
+        title: "Post Download Successfully!",
+      });
     })
   }
 
