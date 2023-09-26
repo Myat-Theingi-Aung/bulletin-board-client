@@ -1,35 +1,29 @@
-# client
+# Bulletin Board Client
 
-This template should help get you started developing with Vue 3 in Vite.
+## Requirements
+- Node 14 or higher
+- MySQL 5.7 or 8
 
-## Recommended IDE Setup
+## Installation
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Clone the repo locally:
+```
+https://github.com/Myat-Theingi-Aung/bulletin-board-client.git
+```
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+`cd` into cloned directory and install dependencies. run below command one by one.
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Server Run
 
-```sh
+Run the dev server:
+```
 npm run dev
 ```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
+Visit below url:
 ```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+http://localhost:3000
 ```
