@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
   {
     const isAuthenticated = store.state.user;
 
-    isAuthenticated ? next() : next('/login')
+    Object.keys(isAuthenticated).length > 0 ? next() : next('/login')
   } 
   
   next();
