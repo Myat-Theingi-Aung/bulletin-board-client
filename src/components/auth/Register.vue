@@ -44,7 +44,12 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password" v-model="form.password">
+                  <div class="input-group mb-3">
+                    <input :type="showPassword ? 'text' : 'password'" v-model="form.password" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('password')" id="password_confirmation">
+                      <font-awesome-icon :icon="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                   <span class="text-danger" v-if="errors.password">
                     <span v-text="errors.password" />
                   </span>
@@ -58,7 +63,12 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password_confirmation" v-model="form.password_confirmation">
+                  <div class="input-group mb-3">
+                    <input :type="showConfirmPassword ? 'text' : 'password'" v-model="form.password_confirmation" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('confirm')" id="password_confirmation">
+                      <font-awesome-icon :icon="showConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                   <span class="text-danger" v-if="errors.password_confirmation">
                     <span v-text="errors.password_confirmation" />
                   </span>
@@ -142,11 +152,13 @@ import api from '../../axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { usePasswordToggle } from '../../utils/CommonUtils'
 
   const store = useStore();
   const router = useRouter();
   const currentUser = store.state.user;
   const user = store.state.register;
+  const { showPassword, showConfirmPassword, togglePasswordVisibility } = usePasswordToggle();
   const headers = { 'Content-Type': 'multipart/form-data' }
 
   const initialForm = {
@@ -169,7 +181,7 @@ import { useStore } from 'vuex'
   const errors = ref(Object.fromEntries(
     Object.keys(initialForm).map(key => [key, store.state.errors[key] || ''])
   ));
-
+  
   const onFileSelected = (e) => {
     const selectedFile = e.target.files[0];
     

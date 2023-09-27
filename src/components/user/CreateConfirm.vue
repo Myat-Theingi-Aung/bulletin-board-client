@@ -29,7 +29,12 @@
                   <label for="passwrod" class="form-label mb-0 me-3">Password:</label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password" v-model="form.password">
+                  <div class="input-group mb-3">
+                    <input :type="showPassword ? 'text' : 'password'" v-model="form.password" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('password')" id="password_confirmation">
+                      <font-awesome-icon :icon="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="row mt-4 align-items-center">
@@ -37,7 +42,12 @@
                   <label for="passwrod_confirmation" class="form-label mb-0 me-3">Password Confirmation:</label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password_confirmation" v-model="form.password_confirmation">
+                  <div class="input-group mb-3">
+                    <input :type="showConfirmPassword ? 'text' : 'password'" v-model="form.password_confirmation" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('confirm')" id="password_confirmation">
+                      <font-awesome-icon :icon="showConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="row mt-4 align-items-center">
@@ -104,6 +114,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import Swal from "sweetalert2"
+import { usePasswordToggle } from '../../utils/CommonUtils'
 
   const Toast = Swal.mixin({
     toast: true,
@@ -124,6 +135,7 @@ import Swal from "sweetalert2"
   const image = store.state.image;
   let imageTest = store.state.image;
   const imageName = store.state.imageName;
+  const { showPassword, showConfirmPassword, togglePasswordVisibility } = usePasswordToggle();
   const headers = { 'Content-Type': 'multipart/form-data' }
 
   const initialForm = {

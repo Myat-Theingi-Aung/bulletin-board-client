@@ -27,7 +27,13 @@
                   <label for="passwrod" class="form-label mb-0 me-3">Password:</label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password" v-model="form.password">
+                  <!-- <input type="password" class="form-control" id="password" v-model="form.password"> -->
+                  <div class="input-group mb-3">
+                    <input :type="showPassword ? 'text' : 'password'" v-model="form.password" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('password')" id="password_confirmation">
+                      <font-awesome-icon :icon="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                   <span class="text-danger fw-bolder" v-if="errors.password">
                     <span v-text="errors.password" />
                   </span>
@@ -65,11 +71,13 @@ import api from '../../axios';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { usePasswordToggle } from '../../utils/CommonUtils';
 
   const forgotLink = 'forgot';
   const createLink = '#';
   const router = useRouter();
   const store = useStore();
+  const { showPassword, togglePasswordVisibility } = usePasswordToggle();
   const initialForm = {
     email: '',
     error: '',

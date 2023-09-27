@@ -16,7 +16,12 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" v-model="form.current_password">
+                  <div class="input-group mb-3">
+                    <input :type="showCurrentPassword ? 'text' : 'password'" v-model="form.current_password" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('current')" id="password_confirmation">
+                      <font-awesome-icon :icon="showCurrentPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                   <span class="text-danger fw-bolder" v-if="errors.current_password">
                     <span v-text="errors.current_password" />
                   </span>
@@ -30,7 +35,12 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" v-model="form.new_password">
+                  <div class="input-group mb-3">
+                    <input :type="showPassword ? 'text' : 'password'" v-model="form.new_password" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('password')" id="password_confirmation">
+                      <font-awesome-icon :icon="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                   <span class="text-danger fw-bolder" v-if="errors.new_password">
                     <span v-text="errors.new_password" />
                   </span>
@@ -44,7 +54,12 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password_confirmation" v-model="form.new_password_confirmation">
+                  <div class="input-group mb-3">
+                    <input :type="showConfirmPassword ? 'text' : 'password'" v-model="form.new_password_confirmation" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
+                    <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('confirm')" id="password_confirmation">
+                      <font-awesome-icon :icon="showConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                    </a>
+                  </div>
                   <span class="text-danger fw-bolder" v-if="errors.new_password_confirmation">
                     <span v-text="errors.new_password_confirmation" />
                   </span>
@@ -70,6 +85,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import Swal from "sweetalert2"
+import { usePasswordToggle } from '../../utils/CommonUtils'
 
   const Toast = Swal.mixin({
     toast: true,
@@ -87,6 +103,7 @@ import Swal from "sweetalert2"
   const createLink= 'register'
   const store = useStore();
   const router = useRouter();
+  const { showPassword, showConfirmPassword, showCurrentPassword, togglePasswordVisibility } = usePasswordToggle();
   const currentUser = store.state.user;
 
   const initialForm = {
