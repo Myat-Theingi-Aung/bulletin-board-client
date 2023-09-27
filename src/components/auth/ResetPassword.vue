@@ -14,8 +14,8 @@
                 </div>
                 <div class="col-6">
                   <input type="password" class="form-control" id="password" v-model="form.password">
-                  <span class="text-danger fw-bolder" v-if="this.errors.password">
-                    <span v-text="this.errors.password" />
+                  <span class="text-danger fw-bolder" v-if="errors.password">
+                    <span v-text="errors.password" />
                   </span>
                 </div>
               </div>
@@ -25,8 +25,8 @@
                 </div>
                 <div class="col-6">
                   <input type="password" class="form-control" id="password_confirmation" v-model="form.password_confirmation">
-                  <span class="text-danger fw-bolder" v-if="this.errors.password_confirmation">
-                    <span v-text="this.errors.password_confirmation" />
+                  <span class="text-danger fw-bolder" v-if="errors.password_confirmation">
+                    <span v-text="errors.password_confirmation" />
                   </span>
                 </div>
               </div>
@@ -44,21 +44,60 @@
   </div>
 </template>
 
-<script>
-import api from '../../axios';
+<script setup>
+import api from '../../axios'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import Swal from "sweetalert2"
 
-  export default {
-  data() {
-    return {
-      form: {
-        password: '',
-        password_confirmation: ''
-      },
-      errors: {
-        password: '',
-        password_confirmation: ''
-      },
-    };
-  },
-};
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
+  const store = useStore()
+  const router = useRouter()
+  const route = useRoute()
+  const data = store.state.resetToken
+  const token = route.params.token
+
+  onMounted(() => {
+    if(data.token != token) {
+      router.push({ name: '404' });
+    }
+  })
+
+  const initialForm = {
+    token: token,
+    password: '',
+    password_confirmation: ''
+  }
+
+  const form = ref({...initialForm})
+  const errors = ref({...initialForm})
+
+  const reset = () => {
+    api.post(`/reset/${token}`, form.value)
+    .then((response) => {
+      Toast.fire({
+        icon: "success",
+        title: response.data.success,
+      });
+      errors.value = { ...initialForm }
+      store.dispatch('resetTokenClear')
+      router.push({name: 'login'})
+    })
+    .catch((error) => {
+      error.response.data.errors.password ? errors.value.password =  error.response.data.errors.password[0] : errors.value.password = ''
+      error.response.data.errors.password_confirmation ? errors.value.password_confirmation =  error.response.data.errors.password_confirmation[0] : errors.value.password_confirmation = ''
+    })
+  }
 </script>

@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-6">
                               <div class="form-check form-switch">
-                                <input class="form-check-input" v-model="form.check" type="checkbox" id="status">
+                                <input class="form-check-input" v-model="form.status" type="checkbox" true-value="1" false-value="0">
                               </div>
                             </div>
                           </div>
@@ -66,23 +66,21 @@
 import { ref, watch, onMounted } from 'vue'
 import api from '../../axios'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router';
-import router from '../../router';
+import { useRoute, useRouter } from 'vue-router';
 
   const list = '/'
   const store = useStore()
   const route = useRoute()
+  const router = useRouter()
   const user = store.state.user
   const postId = route.params.id
   const post = store.state.post
-  const status = post.status == '1' ? true : false
 
   const initialForm = {
     id: post.id,
     title: post.title,
-    description: post.description,
-    check: status,
-    status: post.check == true ? '1' : '0',
+    description: post.description,   
+    status: post.status,
     flag: false,
     user_id: post.user_id,
     created_user_id: post.created_user_id,
@@ -103,13 +101,11 @@ import router from '../../router';
   watch(
     () => store.state.post,
     (newPost) => {
-      const newStatus = newPost.status == '1' ? true : false;
       form.value = {
         id: newPost.id,
         title: newPost.title,
         description: newPost.description,
-        check: newStatus,
-        status: newPost.check == true ? '1' : '0',
+        status: newPost.status,
         flag: false,
         user_id: newPost.user_id,
         created_user_id: newPost.created_user_id,

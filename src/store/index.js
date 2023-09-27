@@ -12,6 +12,8 @@ const vuexPersist = new VuexPersist({
     errors: state.errors,
     register: state.register,
     image: state.image,
+    resetToken: state.resetToken,
+    imageName: state.imageName,
   }),
 });
 
@@ -24,6 +26,8 @@ const store = createStore({
     errors: {},
     register: {},
     image: null,
+    imageName: null,
+    resetToken: {},
   },
   mutations: {
     setUser(state, user) {
@@ -64,6 +68,18 @@ const store = createStore({
     clearImage(state) {
       state.image = null;
     },
+    setResetToken(state, resetToken) {
+      state.resetToken = resetToken
+    },
+    clearResetToken(state) {
+      state.resetToken = {}
+    },
+    setImageName(state, imageName) {
+      state.imageName = imageName
+    },
+    clearImageName(state) {
+      state.imageName = null
+    }
   },
   actions: {
     login({ commit }, {user, token, remember}) {
@@ -71,17 +87,20 @@ const store = createStore({
       commit('setToken', token);
       commit('setRemember', remember);
     },
+    logout({ commit }) {
+      commit('clearUser');
+    },
     user({commit}, user) {
       commit('setUser', user);
     },
     post({ commit }, post) {
       commit('setPost', post);
     },
-    errors({ commit }, errors) {
-      commit('setErrors', errors);
-    },
     postClear( {commit} ) {
       commit('clearPost');
+    },
+    errors({ commit }, errors) {
+      commit('setErrors', errors);
     },
     errorsClear( {commit} ) {
       commit('clearErrors');
@@ -98,8 +117,17 @@ const store = createStore({
     imageClear( {commit} ) {
       commit('clearImage');
     },
-    logout({ commit }) {
-      commit('clearUser');
+    resetToken({commit}, resetToken){
+      commit('setResetToken', resetToken);
+    },
+    resetTokenClear({commit}){
+      commit('clearResetToken');
+    },
+    imageName({commit}, imageName) {
+      commit('setImageName', imageName)
+    },
+    imageNameClear({commit}) {
+      commit('clearImageName');
     },
   },
   getters: {

@@ -65,11 +65,7 @@ import { ref, watch } from 'vue'
     api.post('/logout')
     .then(() => {
       store.dispatch('logout')
-      router.push({ name: "posts" })
-      
-        setTimeout(() => {
-          window.location.reload();
-        }, 10);
+      router.replace({ name: "posts"})
     })
   }
 </script>

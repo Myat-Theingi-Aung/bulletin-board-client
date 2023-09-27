@@ -197,7 +197,7 @@ import Swal from "sweetalert2"
   });
 
   const fetchPosts = (page = 1) => {
-    api.get(`/posts?page=${page}&search=${keyword.value}&user=${currentUser.id}`)
+    api.get(`/posts?page=${page}&search=${keyword.value}&user=${currentUser?.id}`)
       .then((response) => {
         total.value = response.data.pagination.last_page
         posts.value = response.data.posts;
@@ -205,7 +205,7 @@ import Swal from "sweetalert2"
   }
 
   const fetchUsers = () => {
-    api.get(`/users?user=${currentUser.id}`)
+    api.get(`/users?user=${currentUser?.id}`)
     .then((response) => users.value = response.data.all_users)
   }
 

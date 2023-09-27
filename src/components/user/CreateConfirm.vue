@@ -123,6 +123,7 @@ import Swal from "sweetalert2"
   const register = store.state.register;
   const image = store.state.image;
   let imageTest = store.state.image;
+  const imageName = store.state.imageName;
   const headers = { 'Content-Type': 'multipart/form-data' }
 
   const initialForm = {
@@ -150,7 +151,7 @@ import Swal from "sweetalert2"
   }
   const arrayBuffer = new Uint8Array(atob(imageTest).split('').map(char => char.charCodeAt(0)));
   const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
-  const file = new File([blob], 'example.jpg', { type: 'image/jpeg' });
+  const file = new File([blob], imageName, { type: 'image/jpeg' });
   form.value.profile = file;
 
   const confirm = () => {
@@ -168,6 +169,8 @@ import Swal from "sweetalert2"
       });
       store.dispatch('registerClear')
       store.dispatch('errorsClear')
+      store.dispatch('imageClear')
+      store.dispatch('imageNameClear')
       router.push({name: 'users'})
     })
     .catch((error) => {

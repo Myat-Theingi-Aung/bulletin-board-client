@@ -27,7 +27,7 @@ const router = createRouter({
     { path: '/login', name: 'login', component: LoginView },
     { path: '/register', name: 'register', component: RegisterView },
     { path: '/forgot', name: 'forgot', component: ForgotPasswordView },
-    { path: '/reset', name: 'reset', component: ResetPasswordView },
+    { path: '/reset/:token', name: 'reset', component: ResetPasswordView },
     { path: '/change/password', name: 'change', component: ChangePasswordView, meta: { requiresAuth: true } },
     { path: '/sign-up', name: 'signUp', component: SignUpView},
 

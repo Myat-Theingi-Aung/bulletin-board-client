@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-6">
                               <div class="form-check form-switch">
-                                <input class="form-check-input" v-model="form.check" type="checkbox" id="status">
+                                <input class="form-check-input" v-model="form.status" type="checkbox" id="status" true-value="1" false-value="0">
                               </div>
                             </div>
                           </div>
@@ -85,8 +85,7 @@ import Swal from "sweetalert2"
     id: post.id,
     title: post.title,
     description: post.description,
-    check: post.check,
-    status: post.check == true ? '1' : '0', 
+    status: post.status,
     flag: true,
     created_user_id: post.created_user_id,
     updated_user_id: user.id

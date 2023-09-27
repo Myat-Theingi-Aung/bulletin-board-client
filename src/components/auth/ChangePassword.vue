@@ -7,7 +7,7 @@
             <h5 class="text-white">Change Password</h5>
           </div>
           <div class="card-body py-4">
-            <form @submit.prevent="reset">
+            <form @submit.prevent="changePasswrod">
               <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end">
                   <label for="passwrod" class="form-label mb-0 me-3">
@@ -16,9 +16,9 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password" v-model="form.password">
-                  <span class="text-danger fw-bolder" v-if="this.errors.password">
-                    <span v-text="this.errors.password" />
+                  <input type="password" class="form-control" v-model="form.current_password">
+                  <span class="text-danger fw-bolder" v-if="errors.current_password">
+                    <span v-text="errors.current_password" />
                   </span>
                 </div>
               </div>
@@ -30,9 +30,9 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password" v-model="form.new_pass">
-                  <span class="text-danger fw-bolder" v-if="this.errors.new_pass">
-                    <span v-text="this.errors.new_pass" />
+                  <input type="password" class="form-control" v-model="form.new_password">
+                  <span class="text-danger fw-bolder" v-if="errors.new_password">
+                    <span v-text="errors.new_password" />
                   </span>
                 </div>
               </div>
@@ -44,9 +44,9 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <input type="password" class="form-control" id="password_confirmation" v-model="form.new_confirm_pass">
-                  <span class="text-danger fw-bolder" v-if="this.errors.new_confirm_pass">
-                    <span v-text="this.errors.new_confirm_pass" />
+                  <input type="password" class="form-control" id="password_confirmation" v-model="form.new_password_confirmation">
+                  <span class="text-danger fw-bolder" v-if="errors.new_password_confirmation">
+                    <span v-text="errors.new_password_confirmation" />
                   </span>
                 </div>
               </div>
@@ -64,24 +64,54 @@
   </div>
 </template>
 
-<script>
-import api from '../../axios';
+<script setup>
+import api from '../../axios'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import Swal from "sweetalert2"
 
-  export default {
-  data() {
-    return {
-      forgotLink: 'forgot-password',
-      createLink: 'register',
-      form: {
-        password: '',
-        new_pass: '',
-        new_confirm_pass: ''
-      },
-      errors: {
-        password: '',
-        password_confirmation: ''
-      },
-    };
-  },
-};
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
+  const forgotLink= 'forgot-password'
+  const createLink= 'register'
+  const store = useStore();
+  const router = useRouter();
+  const currentUser = store.state.user;
+
+  const initialForm = {
+    current_password: '',
+    new_password: '',
+    new_password_confirmation: ''
+  }
+
+  const form = ref({...initialForm})
+
+  const errors = ref({...initialForm})
+
+  const changePasswrod = () => {
+    api.post('change-password', form.value)
+    .then((response) => {
+      Toast.fire({
+        icon: "success",
+        title: response.data.success,
+      });
+      router.push({name: 'users'})
+    })
+    .catch((error) => {
+      error.response.data.errors.current_password ? errors.value.current_password =  error.response.data.errors.current_password[0] : errors.value.current_password = ''
+      error.response.data.errors.new_password ? errors.value.new_password =  error.response.data.errors.new_password[0] : errors.value.new_password = ''
+      error.response.data.errors.new_password_confirmation ? errors.value.new_password_confirmation =  error.response.data.errors.new_password_confirmation[0] : errors.value.new_password_confirmation = ''
+    })
+  }
 </script>

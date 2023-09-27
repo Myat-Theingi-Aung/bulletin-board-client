@@ -170,15 +170,19 @@ import { useStore } from 'vuex'
     Object.keys(initialForm).map(key => [key, store.state.errors[key] || ''])
   ));
 
-  const onFileSelected = (e) => { 
-    form.value.profile = e.target.files[0]; 
+  const onFileSelected = (e) => {
+    const selectedFile = e.target.files[0];
+    
+    form.value.profile = selectedFile;
+    store.dispatch('imageName', selectedFile.name);
+
     const reader = new FileReader();
-    reader.onload = function(ele) {
-      const dataURL = ele.target.result;
+    reader.onload = (event) => {
+      const dataURL = event.target.result;
       store.dispatch('image', dataURL);
     };
     reader.readAsDataURL(form.value.profile);
-  }
+  };
 
   const register = () => {
     const f = new FormData();
