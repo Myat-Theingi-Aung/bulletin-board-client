@@ -59,20 +59,8 @@ import api from '../../axios'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import Swal from "sweetalert2"
+import Toast from '../../utils/Toast'
 import { usePasswordToggle } from '../../utils/CommonUtils'
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
-  });
 
   const store = useStore()
   const router = useRouter()

@@ -6,9 +6,6 @@
           <div class="card-header bg-success">
             <h5 class="mb-0 py-2 text-white">User List</h5>
           </div>
-          <div class="alert alert-success" role="alert" v-if="message">
-            <span v-text="message" />
-          </div>
           <div class="card-body">
             <div class="row py-5">
               <div class="col-12">
@@ -212,7 +209,7 @@
   import api from '../../axios'
   import $ from 'jquery'
   import Paginate from 'vuejs-paginate-next'
-  import { useStore } from 'vuex';
+  import { useStore } from 'vuex'
 
   const store = useStore()
   const name = ref('');
@@ -225,7 +222,6 @@
   const image = ref('')
   const allUsers = ref([])
   const currentUser = store.state.user
-  const message = ref('')
 
   const deleteUser = (selectedUser) => {
     user.value = selectedUser;
@@ -252,7 +248,10 @@
       $(".modal-backdrop").remove();
       $("body").removeClass("modal-open");
       fetchUsers();
-      message.value = "User Delete Successfully!"
+      Toast.fire({
+        icon: "success",
+        title: 'User Delete Successfully!',
+      });
     })
   }
 

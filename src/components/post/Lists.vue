@@ -165,19 +165,7 @@ import api from '../../axios'
 import $ from 'jquery'
 import Paginate from 'vuejs-paginate-next'
 import { useStore } from 'vuex'
-import Swal from "sweetalert2"
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
-  });
+import Toast from '../../utils/Toast'
 
   const store = useStore()
   const create = '/posts/create'
@@ -246,7 +234,10 @@ import Swal from "sweetalert2"
       $(".modal-backdrop").remove();
       $("body").removeClass("modal-open");
       fetchPosts();
-      message.value = "Post Delete Successfully!"
+      Toast.fire({
+        icon: "success",
+        title: "Post Delete Successfully!",
+      });
     })
   }
 

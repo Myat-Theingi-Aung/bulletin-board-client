@@ -57,7 +57,6 @@ import api from '../../axios'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { ref} from 'vue'
-import { error } from 'jquery'
 
   const store = useStore()
   const router = useRouter()

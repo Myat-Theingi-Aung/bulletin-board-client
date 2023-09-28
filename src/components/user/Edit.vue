@@ -177,7 +177,6 @@ import Swal from "sweetalert2"
         title: response.data.success,
       });
       store.dispatch('user', response.data.user)
-      store.dispatch('message', response.data.success)
       router.push({name: 'users'})
     })
   }

@@ -27,7 +27,6 @@
                   <label for="passwrod" class="form-label mb-0 me-3">Password:</label>
                 </div>
                 <div class="col-6">
-                  <!-- <input type="password" class="form-control" id="password" v-model="form.password"> -->
                   <div class="input-group mb-3">
                     <input :type="showPassword ? 'text' : 'password'" v-model="form.password" class="form-control" aria-label="Recipient's username" aria-describedby="password_confirmation">
                     <a class="btn btn-outline-secondary" @click="togglePasswordVisibility('password')" id="password_confirmation">
