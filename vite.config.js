@@ -18,4 +18,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['jquery'], // Include jQuery as an external dependency
   },
+  server: {
+    port: 3000 // Set your desired port number here
+  }
 })
