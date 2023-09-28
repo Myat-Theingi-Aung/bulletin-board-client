@@ -22,7 +22,12 @@
                 <span v-if="store.getters.isLoggedIn">
                   <a class="btn btn-success me-3 px-5" :href="create">Create</a>
                   <a class="btn btn-success me-3 px-5" :href="upload">Upload</a>
-                  <button class="btn btn-success px-5" @click="downloadCSV">Download</button>
+                  <button class="btn btn-success px-5" @click="downloadCSV">
+                    <span>Download</span>
+                    <span v-if="isLoading">
+                      <font-awesome-icon icon="fa-solid fa-spinner" class="rotate d-inline-block ms-3" />
+                    </span>
+                  </button>
                 </span>  
               </div>
             </div>
@@ -175,6 +180,7 @@ import Toast from '../../utils/Toast'
   const posts = ref([])
   const users = ref([])
   const total = ref()
+  const isLoading = ref(false)
   const currentUser = store.state.user
 
   onMounted(() => {
@@ -206,6 +212,7 @@ import Toast from '../../utils/Toast'
   };
 
   const downloadCSV = () => {
+    isLoading.value = true
     api.get('/posts-export')
     .then((response) => {
       const number = Math.floor(10000 + Math.random() * 90000);
@@ -222,6 +229,9 @@ import Toast from '../../utils/Toast'
         icon: "success",
         title: "Post Download Successfully!",
       });
+    })
+    .finally(() => {
+      isLoading.value = false
     })
   }
 

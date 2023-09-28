@@ -63,8 +63,8 @@ import Toast from '../../utils/Toast'
       router.push({ name: 'posts' });
     })
     .catch((error) => {
-      error.response.data.error ? errors.value = error.response.data.error : errors.value = ''
       error.response.data.errors.file ? errors.value = error.response.data.errors.file[0] : errors.value = ''
+      error.response.data.errors[0] ? errors.value = error.response.data.errors[0][0] : errors.value = ''
     })
   }
 

@@ -121,12 +121,19 @@
                   </span>
                 </div>
               </div>
+              <di class="row mt-4 align-items-center" v-if="showPreview">
+                <div class="col-4"></div>
+                <div class="col-6 position-relative">
+                  <img :src="showPreview" alt="Image Preview" class="img-fluid rounded w-100" />
+                  <font-awesome-icon :icon="['fas', 'circle-xmark']" class="icon-top-right" @click="removeImage" />
+                </div>
+              </di>
               <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end">
                   <label for="profile" class="form-label mb-0 me-3">Profile</label>
                 </div>
                 <div class="col-6">
-                  <input type="file" ref="file" @change="onFileSelected" class="form-control">
+                  <input type="file" ref="fileInput" @change="onFileSelected" class="form-control">
                   <span class="text-danger" v-if="errors.profile">
                     <span v-text="errors.profile" />
                   </span>
@@ -152,25 +159,26 @@ import api from '../../axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { usePasswordToggle } from '../../utils/CommonUtils'
+import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
 
   const store = useStore();
   const router = useRouter();
   const currentUser = store.state.user;
   const user = store.state.register;
   const { showPassword, showConfirmPassword, togglePasswordVisibility } = usePasswordToggle();
+  const { showPreview, fileInput, removeImage } = imagePreview();
   const headers = { 'Content-Type': 'multipart/form-data' }
 
   const initialForm = {
-    name: user.name,
-    email: user.email,
-    password: user.password,
-    password_confirmation: user.password_confirmation,
-    phone: user.phone,
-    dob: user.dob,
-    address: user.address,
-    profile: user.profile,
-    type: '1',
+    name: user.name || '',
+    email: user.email || '',
+    password: user.password || '',
+    password_confirmation: user.password_confirmation || '',
+    phone: user.phone || '',
+    dob: user.dob || '',
+    address: user.address || '',
+    profile: user.profile || '',
+    type: user.type || '1',
     flag: false,
     created_user_id: currentUser.id,
     updated_user_id: currentUser.id
@@ -191,6 +199,7 @@ import { usePasswordToggle } from '../../utils/CommonUtils'
     const reader = new FileReader();
     reader.onload = (event) => {
       const dataURL = event.target.result;
+      showPreview
       store.dispatch('image', dataURL);
     };
     reader.readAsDataURL(form.value.profile);
@@ -221,9 +230,9 @@ import { usePasswordToggle } from '../../utils/CommonUtils'
   };
   
   const resetForm = function() {
-    const f = document.querySelector('form');
-    f.reset();
     form.value = { ...initialForm };
+    fileInput.value.value = ''
+    showPreview.value = false
     Object.keys(errors.value).forEach(key => errors.value[key] = '' );
   }
 </script>

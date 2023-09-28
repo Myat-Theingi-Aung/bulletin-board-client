@@ -6,9 +6,15 @@
           <div class="card-header bg-success">
             <h5 class="text-white">Profile Edit</h5>
           </div>
-          <div class="card-body py-5">
-            <form @submit.prevent="update" method="post" enctype="multipart/form-data">
+          <div class="card-body py-4">
+            <form @submit.prevent="update" method="post" enctype="multipart/form-data" class="pt-3">
               <div class="row align-items-center">
+                <div class="col-4 text-end">Old Profile</div>
+                <div class="col-6">
+                  <img :src="image" :alt="user.name" class="img-fluid w-50 rounded">
+                </div>
+              </div>
+              <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end">
                   <label for="name" class="form-label mb-0 me-3">
                     Name
@@ -80,10 +86,11 @@
                   </span>
                 </div>
               </div>
-              <div class="row mt-4 align-items-center">
-                <div class="col-4 text-end">Old Profile</div>
-                <div class="col-6">
-                  <img :src="image" :alt="user.name" class="img-fluid w-50 rounded">
+              <div class="row mt-4 align-items-center" v-if="showPreview">
+                <div class="col-4"></div>
+                <div class="col-6 position-relative">
+                  <img :src="showPreview" alt="Image Preview" class="img-fluid rounded w-100" />
+                  <font-awesome-icon :icon="['fas', 'circle-xmark']" class="icon-top-right" @click="removeImage" />
                 </div>
               </div>
               <div class="row mt-4 align-items-center">
@@ -91,7 +98,7 @@
                   <label for="profile" class="form-label mb-0 me-3">New Profile</label>
                 </div>
                 <div class="col-6">
-                  <input type="file" ref="file" @change="onFileSelected" class="form-control">
+                  <input type="file" ref="fileInput" @change="onFileSelected" class="form-control">
                   <span class="text-danger fw-bolder" v-if="errors.profile">
                     <span v-text="errors.profile" />
                   </span>
@@ -118,25 +125,15 @@ import api from '../../axios'
 import { useStore } from 'vuex'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import Swal from "sweetalert2"
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
-  });
+import Toast from '../../utils/Toast'
+import { imagePreview } from '../../utils/CommonUtils'
 
   const store = useStore()
   const router = useRouter()
   const user = store.state.user
   const image = ref('')
   const headers = { 'Content-Type': 'multipart/form-data' }
+  const { showPreview, fileInput, removeImage } = imagePreview()
   const initialForm = {
     'name': user.name,
     'email': user.email,
@@ -159,7 +156,12 @@ import Swal from "sweetalert2"
   })
 
   const onFileSelected = (e) => { 
-    form.value.profile = e.target.files[0]; 
+    form.value.profile = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      showPreview.value = reader.result;
+    }
+    reader.readAsDataURL(form.value.profile);
   }
 
   const update = () => {

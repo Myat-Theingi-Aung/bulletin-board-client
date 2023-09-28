@@ -6,8 +6,8 @@ import Footer from './components/layout/Footer.vue'
 
 <template>
   <div class="container-fluid">
-    <Header style="height: 8vh" />
+    <Header />
     <RouterView style="min-height: 84vh" /> 
-    <Footer style="height: 8vh" /> 
+    <Footer /> 
   </div> 
 </template>

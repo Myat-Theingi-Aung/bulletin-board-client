@@ -14,3 +14,35 @@
   background-color: #f8f9fa !important;
   color: black !important;
 }
+
+.icon-top-right {
+  position: absolute;
+  top: -15px;
+  font-size: 20px;
+  color: #808B96 !important;
+  background-color: white;
+  border-radius: 50%;
+  right: -10px;
+  padding: 5px;
+  z-index: 1;
+  cursor: pointer;
+  transition: font-size 0.3s ease;
+}
+
+.icon-top-right:hover {
+  font-size: 24px;
+  color: red !important;
+}
+
+.rotate {
+  animation: rotate360 2s linear infinite;
+}
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

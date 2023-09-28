@@ -90,7 +90,7 @@
                   <label for="profile" class="form-label mb-0 me-3">Profile:</label>
                 </div>
                 <div class="col-6">
-                  <img :src="image" alt="" class="img-fluid" id="profile">
+                  <img :src="image" alt="" class="img-fluid rounded w-100" id="profile">
                 </div>
               </div>
               <div class="row mt-4 align-items-center">

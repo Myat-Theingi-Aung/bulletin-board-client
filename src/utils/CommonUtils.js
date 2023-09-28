@@ -22,3 +22,19 @@ export const usePasswordToggle = () => {
     togglePasswordVisibility,
   };
 };
+
+export const imagePreview = () => {
+  const showPreview = ref('')
+  const fileInput = ref(null)
+
+  const removeImage = () => {
+    showPreview.value = false
+    fileInput.value.value = ''
+  };
+
+  return {
+    showPreview,
+    fileInput,
+    removeImage,
+  };
+};

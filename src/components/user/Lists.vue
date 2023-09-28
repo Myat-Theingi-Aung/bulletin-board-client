@@ -262,6 +262,9 @@
         const imageUrl = URL.createObjectURL(blob);
         image.value = imageUrl;
       })
+      .catch(() => {
+        image.value = '';
+      })
   };
 
   const filterUsers = (id) =>{ 
