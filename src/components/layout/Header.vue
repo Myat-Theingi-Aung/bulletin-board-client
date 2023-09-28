@@ -10,10 +10,14 @@
           <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <RouterLink class="nav-link text-success" aria-current="page" to="/users">Users</RouterLink>
+                <RouterLink class="nav-link text-success" aria-current="page" to="/users">
+                  Users
+                </RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link text-success" to="/">Posts</RouterLink>
+                <RouterLink class="nav-link text-success" to="/">
+                  Posts
+                </RouterLink>
               </li>
             </ul>
             <ul class="navbar-nav" v-if="store.getters.isLoggedIn">

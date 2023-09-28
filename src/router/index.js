@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import store from '../store/index'
 import NotFound from '../views/NotFoundView.vue'
+import { isNotFound } from '../utils/notFound'; 
 
 import LoginView from '../views/auth/LoginView.vue'
 import RegisterView from '../views/auth/RegisterView.vue'
@@ -47,9 +47,9 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', redirect: { name: '404' } }
   ]
 })
-let isNotFound = store.state.isNotFound
+
 router.beforeEach((to, from, next) => {
-  isNotFound = to.name === '404';
+  isNotFound.value = to.name === '404'
 
   if (to.meta.requiresAuth) {
     const isAuthenticated = store.state.user;
