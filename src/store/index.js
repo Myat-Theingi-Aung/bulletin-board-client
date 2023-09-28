@@ -14,6 +14,7 @@ const vuexPersist = new VuexPersist({
     image: state.image,
     resetToken: state.resetToken,
     imageName: state.imageName,
+    isNotFound: state.isNotFound,
   }),
 });
 
@@ -28,6 +29,7 @@ const store = createStore({
     image: null,
     imageName: null,
     resetToken: {},
+    isNotFound: false,
   },
   mutations: {
     setUser(state, user) {
@@ -79,7 +81,10 @@ const store = createStore({
     },
     clearImageName(state) {
       state.imageName = null
-    }
+    },
+    setNotFound(state, isNotFound) {
+      state.isNotFound = isNotFound
+    },
   },
   actions: {
     login({ commit }, {user, token, remember}) {

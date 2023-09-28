@@ -47,10 +47,11 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', redirect: { name: '404' } }
   ]
 })
-
+let isNotFound = store.state.isNotFound
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) 
-  {
+  isNotFound = to.name === '404';
+
+  if (to.meta.requiresAuth) {
     const isAuthenticated = store.state.user;
 
     Object.keys(isAuthenticated).length > 0 ? next() : next('/login')
