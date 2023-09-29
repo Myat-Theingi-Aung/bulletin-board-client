@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store/index'
 import NotFound from '../views/NotFoundView.vue'
 import { isNotFound } from '../utils/notFound'; 
 

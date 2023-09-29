@@ -2,6 +2,11 @@
   color: #198754;
 }
 
+.active-nav {
+  text-decoration: underline !important;
+  text-underline-offset: 4px;
+}
+
 .fs-small {
   font-size: 7px !important;
 }
