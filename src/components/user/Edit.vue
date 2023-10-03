@@ -169,8 +169,7 @@ import { imagePreview } from '../../utils/CommonUtils'
     for (let [key, val] of Object.entries(form.value)) {
       f.append(key, val);
     }
-    for (const [key, value] of f.entries()) {
-    }
+    f.append('_method', 'put');
 
     api.post(`/users/${user.id}`, f, { headers })
     .then((response) => {

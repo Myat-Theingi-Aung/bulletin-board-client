@@ -156,7 +156,7 @@
 
 <script setup>
 import api from '../../axios'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
@@ -189,6 +189,21 @@ import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
   const errors = ref(Object.fromEntries(
     Object.keys(initialForm).map(key => [key, store.state.errors[key] || ''])
   ));
+
+  watch(
+    () => store.state.register,
+    (newUser) => {
+      form.value.name = newUser.name
+      form.value.email = newUser.email
+      form.value.password = newUser.password
+      form.value.password_confirmation = newUser.password_confirmation
+      form.value.phone = newUser.phone
+      form.value.dob = newUser.dob
+      form.value.address = newUser.address
+      form.value.profile = newUser.profile
+      form.value.type = newUser.type || '1'
+    }
+  );
   
   const onFileSelected = (e) => {
     const selectedFile = e.target.files[0];
@@ -199,11 +214,13 @@ import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
     const reader = new FileReader();
     reader.onload = (event) => {
       const dataURL = event.target.result;
-      showPreview
+      showPreview.value = reader.result;
       store.dispatch('image', dataURL);
     };
     reader.readAsDataURL(form.value.profile);
   };
+
+  console.log(showPreview)
 
   const register = () => {
     const f = new FormData();
@@ -230,6 +247,8 @@ import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
   };
   
   const resetForm = function() {
+    store.dispatch('registerClear')
+    store.dispatch('errorsClear')
     form.value = { ...initialForm };
     fileInput.value.value = ''
     showPreview.value = false

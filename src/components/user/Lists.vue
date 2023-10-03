@@ -10,19 +10,19 @@
             <div class="row py-5">
               <div class="col-12">
                 <form @submit.prevent="fetchUsers" class="d-flex justify-content-end">
-                  <div class="d-flex align-items-center justify-content-center me-4">
-                    <label for="name" class="form-label mb-0 me-3">Name:</label>
+                  <div class="d-flex align-items-center w-25 justify-content-center me-md-4">
+                    <label for="name" class="form-label mb-0 me-md-3">Name:</label>
                     <input type="text" class="form-control" id="name" v-model="name">
                   </div>
-                  <div class="d-flex align-items-center justify-content-center me-4">
+                  <div class="d-flex align-items-center w-25 justify-content-center me-4">
                     <label for="email" class="form-label mb-0 me-3">Email:</label>
                     <input type="email" class="form-control" id="email" v-model="email">
                   </div>
-                  <div class="d-flex align-items-center justify-content-center me-4">
+                  <div class="d-flex align-items-center w-25 justify-content-center me-4">
                     <label for="from" class="form-label mb-0 me-3">From:</label>
                     <input type="date" class="form-control" id="from" v-model="from">
                   </div>
-                  <div class="d-flex align-items-center justify-content-center me-4">
+                  <div class="d-flex align-items-center w-25 justify-content-center me-4">
                     <label for="to" class="from-label mb-0 me-3">to:</label>
                     <input type="date" class="form-control" id="to" v-model="to">
                   </div>
@@ -31,7 +31,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-12">
+              <div class="col-12 table-responsive">
                 <table class="table table-striped">
                   <thead class="table-primary">
                     <tr>
@@ -154,7 +154,7 @@
               <div class="col-9">
                 <div class="row mb-3">
                   <div class="col-5">Name</div>
-                  <div class="col-7 text-capitalize">{{user.name}}</div>
+                  <div class="col-7 text-capitalize">{{ user.name }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Type</div>
@@ -162,11 +162,11 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Email</div>
-                  <div class="col-7">{{user.email}}</div>
+                  <div class="col-7">{{ user.email }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Phone</div>
-                  <div class="col-7">{{user.phone}}</div>
+                  <div class="col-7">{{ user.phone }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Date of Birth</div>
@@ -174,7 +174,7 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Address</div>
-                  <div class="col-7 text-capitalize">{{user.address}}</div>
+                  <div class="col-7 text-capitalize">{{ user.address }}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-5">Created Date</div>
@@ -210,6 +210,7 @@
   import $ from 'jquery'
   import Paginate from 'vuejs-paginate-next'
   import { useStore } from 'vuex'
+  import Toast from '../../utils/Toast'
 
   const store = useStore()
   const name = ref('');

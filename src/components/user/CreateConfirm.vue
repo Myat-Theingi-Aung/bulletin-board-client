@@ -97,7 +97,7 @@
                 <div class="col-4 text-end"></div>
                 <div class="col-6">
                   <button class="btn btn-success me-3">Confirm</button>
-                  <button class="btn btn-secondary">Cancel</button>
+                  <a @click.prevent="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
               </div>
             </form>
@@ -146,7 +146,7 @@ import { usePasswordToggle } from '../../utils/CommonUtils'
     Object.keys(initialForm).map(key => [key, ''])
   ));
 
-  if (imageTest.startsWith('data:image/jpeg;base64,')) {
+  if (imageTest?.startsWith('data:image/jpeg;base64,')) {
     imageTest = imageTest.slice('data:image/jpeg;base64,'.length);
   }
   const arrayBuffer = new Uint8Array(atob(imageTest).split('').map(char => char.charCodeAt(0)));
@@ -187,4 +187,9 @@ import { usePasswordToggle } from '../../utils/CommonUtils'
       router.push({name: 'register'})
     })
   };
+
+  const cancel = () => {
+    store.dispatch('register', form.value)
+    router.push({name: 'register'})
+  }
 </script>
