@@ -121,7 +121,6 @@ import { usePasswordToggle } from '../../utils/CommonUtils'
   const currentUser = store.state.user;
   const register = store.state.register;
   const image = store.state.image;
-  console.log(image)
   let imageTest = store.state.image;
   const imageName = store.state.imageName;
   const { showPassword, showConfirmPassword, togglePasswordVisibility } = usePasswordToggle();
