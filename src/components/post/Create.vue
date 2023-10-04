@@ -56,7 +56,7 @@
 import api from '../../axios'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { ref} from 'vue'
+import { ref } from 'vue'
 
   const store = useStore()
   const router = useRouter()
@@ -81,6 +81,7 @@ import { ref} from 'vue'
     api.post('/posts', form.value)
     .then(() => {
       store.dispatch('post', form.value)
+      store.dispatch('errorsClear')
       router.push({ name: 'postsCreateConfirm' })
     })
     .catch((error) => {

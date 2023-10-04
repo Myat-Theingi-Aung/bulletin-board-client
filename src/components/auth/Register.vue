@@ -128,6 +128,12 @@
                   <font-awesome-icon :icon="['fas', 'circle-xmark']" class="icon-top-right" @click="removeImage" />
                 </div>
               </di>
+              <div class="row mt-4" v-else-if="image">
+                <div class="col-4"></div>
+                <div class="col-6">
+                  <img :src="image" alt="Old Image" class="img-fluid rounded w-100" />
+                </div>
+              </div>
               <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end">
                   <label for="profile" class="form-label mb-0 me-3">Profile</label>
@@ -165,6 +171,7 @@ import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
   const router = useRouter();
   const currentUser = store.state.user;
   const user = store.state.register;
+  const image = store.state.image;
   const { showPassword, showConfirmPassword, togglePasswordVisibility } = usePasswordToggle();
   const { showPreview, fileInput, removeImage } = imagePreview();
   const headers = { 'Content-Type': 'multipart/form-data' }
@@ -219,8 +226,6 @@ import { usePasswordToggle, imagePreview } from '../../utils/CommonUtils'
     };
     reader.readAsDataURL(form.value.profile);
   };
-
-  console.log(showPreview)
 
   const register = () => {
     const f = new FormData();

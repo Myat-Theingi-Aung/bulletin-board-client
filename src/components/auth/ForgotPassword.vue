@@ -22,7 +22,12 @@
               <div class="row">
                 <div class="col-4"></div>
                 <div class="col-6">
-                  <button class="btn btn-success">Reset Password</button>
+                  <button class="btn btn-success">
+                    <span>Reset Password</span>
+                    <span v-if="isLoading">
+                      <font-awesome-icon icon="fa-solid fa-spinner" class="rotate d-inline-block ms-3" />
+                    </span>
+                  </button>
                 </div>
               </div>
             </form>
@@ -47,8 +52,10 @@ import Toast from '../../utils/Toast'
   }
   const form = ref({...initialForm})
   const errors = ref({...initialForm})
+  const isLoading = ref(false)
 
   const forgot = () => {
+    isLoading.value = true
     api.post('forgot', form.value)
     .then((response) => {
       Toast.fire({
@@ -62,6 +69,7 @@ import Toast from '../../utils/Toast'
     .catch((error) => {
       error.response.data.errors.email ? errors.value.email =  error.response.data.errors.email[0] : errors.value.email = ''
     })
+    .finally(() => isLoading.value = false)
   }
 
 </script>

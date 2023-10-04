@@ -8,12 +8,6 @@
           </div>
           <div class="card-body py-4">
             <form @submit.prevent="update" method="post" enctype="multipart/form-data" class="pt-3">
-              <div class="row align-items-center">
-                <div class="col-4 text-end">Old Profile</div>
-                <div class="col-6">
-                  <img :src="image" :alt="user.name" class="img-fluid w-50 rounded">
-                </div>
-              </div>
               <div class="row mt-4 align-items-center">
                 <div class="col-4 text-end">
                   <label for="name" class="form-label mb-0 me-3">
@@ -91,6 +85,12 @@
                 <div class="col-6 position-relative">
                   <img :src="showPreview" alt="Image Preview" class="img-fluid rounded w-100" />
                   <font-awesome-icon :icon="['fas', 'circle-xmark']" class="icon-top-right" @click="removeImage" />
+                </div>
+              </div>
+              <div class="row mt-4 align-items-center" v-else>
+                <div class="col-4 text-end">Old Profile</div>
+                <div class="col-6">
+                  <img :src="image" :alt="user.name" class="img-fluid w-100 rounded">
                 </div>
               </div>
               <div class="row mt-4 align-items-center">

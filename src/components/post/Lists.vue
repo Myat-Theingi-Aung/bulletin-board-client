@@ -165,7 +165,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch  } from 'vue'
+import { ref, onMounted  } from 'vue'
 import api from '../../axios'
 import $ from 'jquery'
 import Paginate from 'vuejs-paginate-next'

@@ -119,7 +119,7 @@ import { useRoute, useRouter } from 'vue-router';
     api.get(`posts/${postId}`)
     .then((response) => {
       const e = store.state.errors
-      if(Object.keys(e).length == 0) {
+      if(Object.keys(e).length === 0 && Object.keys(store.state.post).length === 0) {
         store.dispatch('post', response.data.post)
       }
     })
@@ -130,7 +130,7 @@ import { useRoute, useRouter } from 'vue-router';
 
   const edit = () => {
     api.put(`/posts/${postId}`, form.value)
-    .then((response) => {
+    .then(() => {
       store.dispatch('post', form.value)
       router.push({ name: 'postsEditConfirm'})
     })
@@ -143,7 +143,7 @@ import { useRoute, useRouter } from 'vue-router';
   const resetForm = function() {
     form.value.title = store.state.post.title
     form.value.description = store.state.post.description
-    form.value.check = store.state.post.status == '1' ? true : false
+    form.value.status = store.state.post.status
     form.value.flag = false
     errors.value.title = ''
     errors.value.description = ''

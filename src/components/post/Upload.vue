@@ -17,7 +17,7 @@
                   <label for="file" class="form-label mb-0 me-3">CSV File</label>
                 </div>
                 <div class="col-6">
-                  <input class="form-control" @change="onFileSelected" type="file" id="file">
+                  <input class="form-control" ref="inputFile" @change="onFileSelected" type="file" id="file">
                 </div>
               </div>
               <div class="row">
@@ -45,6 +45,7 @@ import Toast from '../../utils/Toast'
   const list = '/'
   const file = ref('')
   const errors = ref('')
+  const inputFile = ref(null)
 
   const onFileSelected = (e) => file.value = e.target.files[0];
 
@@ -64,13 +65,11 @@ import Toast from '../../utils/Toast'
     })
     .catch((error) => {
       error.response.data.errors.file ? errors.value = error.response.data.errors.file[0] : errors.value = ''
-      error.response.data.errors[0] ? errors.value = error.response.data.errors[0][0] : errors.value = ''
     })
   }
 
   const resetForm = function() {
-      const f = document.querySelector('form');
-      f.reset();
+      inputFile.value.value = ''
       file.value = '';
       errors.value = '';
     }
